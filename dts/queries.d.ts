@@ -1,5 +1,5 @@
 import { Request } from './request.js';
-import { AlliancePaginator, BankrecPaginator, BbGamePaginator, BbPlayerPaginator, BbTeamPaginator, BountyPaginator, CityPaginator, NationPaginator, Query, QueryAlliancesArgs, QueryBankrecsArgs, QueryBaseball_GamesArgs, QueryBaseball_PlayersArgs, QueryBaseball_TeamsArgs, QueryBountiesArgs, QueryCitiesArgs, QueryNationsArgs, QueryTradepricesArgs, QueryTradesArgs, QueryTreatiesArgs, QueryWarattacksArgs, QueryWarsArgs, TradePaginator, TradepricePaginator, TreatyPaginator, WarAttackPaginator, WarPaginator } from './types';
+import { AlliancePaginator, BankrecPaginator, BbGamePaginator, BbPlayerPaginator, BbTeamPaginator, BountyPaginator, CityPaginator, Color, GameInfo, NationPaginator, Query, QueryAlliancesArgs, QueryBankrecsArgs, QueryBaseball_GamesArgs, QueryBaseball_PlayersArgs, QueryBaseball_TeamsArgs, QueryBountiesArgs, QueryCitiesArgs, QueryNationsArgs, QueryTradepricesArgs, QueryTradesArgs, QueryTreatiesArgs, QueryWarattacksArgs, QueryWarsArgs, TradePaginator, TradepricePaginator, TreatyPaginator, WarAttackPaginator, WarPaginator } from './types';
 export declare class QueryRequest<A, T, R> {
     endpoint: string;
     args: A;
@@ -55,6 +55,12 @@ export declare class RequestBuilder<Response = {}> {
     }>;
     baseball_players<R>(args: QueryBaseball_PlayersArgs, f: (req: Request<BbPlayerPaginator, {}>) => Request<BbPlayerPaginator, R>): RequestBuilder<Response & {
         baseball_players: R;
+    }>;
+    colors<R>(f: (req: Request<Color, {}>) => Request<Color, R>): RequestBuilder<Response & {
+        colors: R[];
+    }>;
+    game_info<R>(f: (req: Request<GameInfo, {}>) => Request<GameInfo, R>): RequestBuilder<Response & {
+        game_info: R;
     }>;
     send(): Promise<Response>;
 }

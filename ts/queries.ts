@@ -3,6 +3,8 @@ import { Request } from './request.js';
 import {
   AlliancePaginator, BankrecPaginator, BbGamePaginator, BbPlayerPaginator, BbTeamPaginator,
   BountyPaginator, CityPaginator,
+  Color,
+  GameInfo,
   NationPaginator,
   Query,
   QueryAlliancesArgs, QueryBankrecsArgs, QueryBaseball_GamesArgs, QueryBaseball_PlayersArgs, QueryBaseball_TeamsArgs,
@@ -17,6 +19,16 @@ import {
   WarPaginator
 } from './types';
 
+function stringifyArgs<A>(args: A): string {
+  if(Array.isArray(args)) {
+    return `[${args.map((v) => `${stringifyArgs(v)}`).join(',')}]`;
+  } else if(typeof args === 'object') {
+    return `{${Object.entries(args).map(([k, v]) =>  `${k}:${stringifyArgs(v)}`).join(' ')}}`;
+  } else {
+    return String(args);
+  }
+}
+
 export class QueryRequest<A, T, R> {
   endpoint: string;
   args: A;
@@ -28,7 +40,7 @@ export class QueryRequest<A, T, R> {
   }
   stringify(): string {
     if(Object.keys(this.args).length > 0) {
-      const args = Object.entries(this.args).map(([k, v]) => `${k}:${v}`).join(' ');
+      const args = Object.entries(this.args).map(([k, v]) =>  `${k}:${stringifyArgs(v)}`).join(' ');
       return `${this.endpoint}(${args}){${this.request.stringify()}}`;
     } else {
       return `${this.endpoint}{${this.request.stringify()}}`;
@@ -149,22 +161,17 @@ export class RequestBuilder<Response = {}> {
     builder.requests.baseball_players = new QueryRequest('baseball_players', args, f(new Request()));
     return builder;
   }
-
+  colors<R>(f: (req: Request<Color, {}>) => Request<Color, R>): RequestBuilder<Response & {colors: R[]}> {
+    const builder = this as any as RequestBuilder<Response & {colors: R[]}>;
+    builder.requests.colors = new QueryRequest('colors', {}, f(new Request()));
+    return builder;
+  }
+  game_info<R>(f: (req: Request<GameInfo, {}>) => Request<GameInfo, R>): RequestBuilder<Response & {game_info: R}> {
+    const builder = this as any as RequestBuilder<Response & {game_info: R}>;
+    builder.requests.game_info = new QueryRequest('game_info', {}, f(new Request()));
+    return builder;
+  }
   async send(): Promise<Response> {
     return await config.executor.push(this.requests);
   }
 }
-
-async function test() {
-  const response =   await new RequestBuilder()
-    .nations({}, (n) => n.child('data', (d) => d
-      .fields('nation_name')
-      .child('alliance', (a) => a.fields('accept_members')))
-    )
-    .bankrecs({first:1}, (b) => b.child('data', (d) => d
-      .fields('date'))
-    )
-    .send();
-  console.log(JSON.stringify(response));
-}
-await test();
