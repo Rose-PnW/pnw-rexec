@@ -1,0 +1,14 @@
+{
+  "name": "@thorns/requester",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Request builder and executor for PnW GraphQL.",
+  "dependencies": {
+    "@thorns/core": "1.0.0",
+    "@thorns/pnw-api": "1.0.0",
+    "@thorns/commands": "1.0.0",
+    "node-fetch": "3.0.0"
+  },
+  "types": "./dts/index.d.ts",
+  "main": "./js/index.js"
+}

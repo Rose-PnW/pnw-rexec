@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.json",
+  "include": ["ts/*"],
+  "compilerOptions": {
+    "rootDir": "ts",
+    "outDir": "js",
+    "declarationDir": "dts",
+    "composite": true
+  }
+}
