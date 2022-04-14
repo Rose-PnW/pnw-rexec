@@ -40,6 +40,21 @@ export class RequestBuilder {
         builder.requests.me = new QueryRequest('me', {}, f(new Request()));
         return builder;
     }
+    treasures(f) {
+        const builder = this;
+        builder.requests.treasures = new QueryRequest('treasures', {}, f(new Request()));
+        return builder;
+    }
+    colors(f) {
+        const builder = this;
+        builder.requests.colors = new QueryRequest('colors', {}, f(new Request()));
+        return builder;
+    }
+    game_info(f) {
+        const builder = this;
+        builder.requests.game_info = new QueryRequest('game_info', {}, f(new Request()));
+        return builder;
+    }
     nations(args, f) {
         const builder = this;
         builder.requests.nations = new QueryRequest('nations', args, f(new Request()));
@@ -103,16 +118,6 @@ export class RequestBuilder {
     baseball_players(args, f) {
         const builder = this;
         builder.requests.baseball_players = new QueryRequest('baseball_players', args, f(new Request()));
-        return builder;
-    }
-    colors(f) {
-        const builder = this;
-        builder.requests.colors = new QueryRequest('colors', {}, f(new Request()));
-        return builder;
-    }
-    game_info(f) {
-        const builder = this;
-        builder.requests.game_info = new QueryRequest('game_info', {}, f(new Request()));
         return builder;
     }
     async send() {

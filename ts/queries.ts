@@ -1,7 +1,7 @@
 import { config } from './executors.js';
 import { Request } from './request.js';
 import {
-  AlliancePaginator, BankrecPaginator, BbGamePaginator, BbPlayerPaginator, BbTeamPaginator,
+  AlliancePaginator, ApiKeyDetails, BankrecPaginator, BbGamePaginator, BbPlayerPaginator, BbTeamPaginator,
   BountyPaginator, CityPaginator,
   Color,
   GameInfo, Nation,
@@ -15,7 +15,7 @@ import {
   QueryWarattacksArgs,
   QueryWarsArgs,
   TradePaginator,
-  TradepricePaginator, TreatyPaginator, WarAttackPaginator,
+  TradepricePaginator, Treasure, TreatyPaginator, WarAttackPaginator,
   WarPaginator
 } from './types';
 
@@ -58,10 +58,27 @@ export interface RequestBuilder<Response> {
 export class RequestBuilder<Response = {}> {
   requests: { [K in keyof Query]: QueryRequest<any, any, any> } = {};
   me<R> (
-      f: (req: Request<{nation: Nation}, {}>) => Request<{nation: Nation}, R>
+      f: (req: Request<ApiKeyDetails, {}>) => Request<ApiKeyDetails, R>
   ): RequestBuilder<Response & {me: R}> {
     const builder = this as any as RequestBuilder<Response & {me: R}>;
     builder.requests.me = new QueryRequest('me', {}, f(new Request()));
+    return builder;
+  }
+  treasures<R> (
+      f: (req: Request<Treasure, {}>) => Request<Treasure, R>
+  ): RequestBuilder<Response & {treasures: R[]}> {
+    const builder = this as any as RequestBuilder<Response & {treasures: R[]}>;
+    builder.requests.treasures = new QueryRequest('treasures', {}, f(new Request()));
+    return builder;
+  }
+  colors<R>(f: (req: Request<Color, {}>) => Request<Color, R>): RequestBuilder<Response & {colors: R[]}> {
+    const builder = this as any as RequestBuilder<Response & {colors: R[]}>;
+    builder.requests.colors = new QueryRequest('colors', {}, f(new Request()));
+    return builder;
+  }
+  game_info<R>(f: (req: Request<GameInfo, {}>) => Request<GameInfo, R>): RequestBuilder<Response & {game_info: R}> {
+    const builder = this as any as RequestBuilder<Response & {game_info: R}>;
+    builder.requests.game_info = new QueryRequest('game_info', {}, f(new Request()));
     return builder;
   }
   nations<R> (
@@ -166,16 +183,6 @@ export class RequestBuilder<Response = {}> {
   ): RequestBuilder<Response & {baseball_players: R}> {
     const builder = this as any as RequestBuilder<Response & {baseball_players: R}>;
     builder.requests.baseball_players = new QueryRequest('baseball_players', args, f(new Request()));
-    return builder;
-  }
-  colors<R>(f: (req: Request<Color, {}>) => Request<Color, R>): RequestBuilder<Response & {colors: R[]}> {
-    const builder = this as any as RequestBuilder<Response & {colors: R[]}>;
-    builder.requests.colors = new QueryRequest('colors', {}, f(new Request()));
-    return builder;
-  }
-  game_info<R>(f: (req: Request<GameInfo, {}>) => Request<GameInfo, R>): RequestBuilder<Response & {game_info: R}> {
-    const builder = this as any as RequestBuilder<Response & {game_info: R}>;
-    builder.requests.game_info = new QueryRequest('game_info', {}, f(new Request()));
     return builder;
   }
   async send(): Promise<Response> {
