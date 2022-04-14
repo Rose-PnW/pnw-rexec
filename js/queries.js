@@ -35,6 +35,11 @@ export class RequestBuilder {
     constructor() {
         this.requests = {};
     }
+    me(f) {
+        const builder = this;
+        builder.requests.me = new QueryRequest('me', {}, f(new Request()));
+        return builder;
+    }
     nations(args, f) {
         const builder = this;
         builder.requests.nations = new QueryRequest('nations', args, f(new Request()));

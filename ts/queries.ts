@@ -4,8 +4,8 @@ import {
   AlliancePaginator, BankrecPaginator, BbGamePaginator, BbPlayerPaginator, BbTeamPaginator,
   BountyPaginator, CityPaginator,
   Color,
-  GameInfo,
-  NationPaginator,
+  GameInfo, Nation,
+  NationPaginator, PaginatorInfo,
   Query,
   QueryAlliancesArgs, QueryBankrecsArgs, QueryBaseball_GamesArgs, QueryBaseball_PlayersArgs, QueryBaseball_TeamsArgs,
   QueryBountiesArgs, QueryCitiesArgs,
@@ -57,6 +57,13 @@ export interface RequestBuilder<Response> {
 
 export class RequestBuilder<Response = {}> {
   requests: { [K in keyof Query]: QueryRequest<any, any, any> } = {};
+  me<R> (
+      f: (req: Request<{nation: Nation}, {}>) => Request<{nation: Nation}, R>
+  ): RequestBuilder<Response & {me: R}> {
+    const builder = this as any as RequestBuilder<Response & {me: R}>;
+    builder.requests.me = new QueryRequest('me', {}, f(new Request()));
+    return builder;
+  }
   nations<R> (
     args: QueryNationsArgs,
     f: (req: Request<NationPaginator, {}>) => Request<NationPaginator, R>
