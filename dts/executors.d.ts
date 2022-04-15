@@ -1,10 +1,8 @@
-import { QueryRequest } from "./queries";
 import { Query } from "./types";
 import { Response } from "node-fetch";
+import { BaseRequest } from "./request";
 export interface Executor {
-    push<R>(requests: {
-        [K in keyof Query]: QueryRequest<any, any, any>;
-    }): Promise<R>;
+    push<R>(...requests: [keyof Query, BaseRequest<any, any>][]): Promise<R>;
 }
 interface ExecutorLog {
     date: Date;
@@ -12,9 +10,7 @@ interface ExecutorLog {
     response: Response;
 }
 export declare class InstantExecutor implements Executor {
-    push<R>(requests: {
-        [K in keyof Query]: QueryRequest<any, any, any>;
-    }): Promise<R>;
+    push<R>(...requests: [keyof Query, BaseRequest<any, any>][]): Promise<R>;
 }
 declare class RequesterConfig {
     executor: Executor;

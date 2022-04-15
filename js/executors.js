@@ -13,9 +13,9 @@ class QueryError extends Error {
     }
 }
 export class InstantExecutor {
-    async push(requests) {
+    async push(...requests) {
         while (true) {
-            const queries = Object.values(requests).map(req => req.stringify());
+            const queries = requests.map(([_, req]) => req.stringify());
             const query = `{${queries.join(' ')}}`;
             const response = await fetch(url(), {
                 headers: {
@@ -37,8 +37,7 @@ export class InstantExecutor {
                 }
                 else {
                     const data = query.data;
-                    const entries = Object.entries(requests);
-                    const result = Object.fromEntries(entries.map(([k, r]) => [k, r.parse(data[k])]));
+                    const result = Object.fromEntries(requests.map(([k, r]) => [k, r.parse(data[k])]));
                     return result;
                 }
             }

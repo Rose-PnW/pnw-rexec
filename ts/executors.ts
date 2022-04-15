@@ -1,9 +1,9 @@
-import { QueryRequest } from "./queries";
 import { Query } from "./types";
 import fetch, { Response } from "node-fetch";
+import { BaseRequest } from "./request";
 
 export interface Executor {
-  push<R>(requests: {[K in keyof Query]: QueryRequest<any, any, any>}): Promise<R>;
+  push<R>(...requests: [keyof Query, BaseRequest<any, any>][]): Promise<R>;
 }
 
 function url() {
@@ -27,9 +27,9 @@ interface ExecutorLog {
 }
 
 export class InstantExecutor implements Executor {
-  async push<R>(requests: {[K in keyof Query]: QueryRequest<any, any, any>}): Promise<R> {
+  async push<R>(...requests: [keyof Query, BaseRequest<any, any>][]): Promise<R> {
     while(true) {
-      const queries: string[] = Object.values(requests).map(req => req.stringify());
+      const queries: string[] = requests.map(([_, req]) => req.stringify());
       const query = `{${queries.join(' ')}}`;
       const response = await fetch(url(), {
         headers: {
@@ -50,8 +50,7 @@ export class InstantExecutor implements Executor {
           throw new QueryError(response, JSON.stringify(query.errors));
         } else {
           const data = query.data;
-          const entries = Object.entries(requests) as ([keyof Query, QueryRequest<any, any, any>])[];
-          const result = Object.fromEntries(entries.map(([k,r]) => [k, r.parse(data[k])])) as R;
+          const result = Object.fromEntries(requests.map(([k,r]) => [k, r.parse(data[k])])) as R;
           return result;
         }
       } else {
