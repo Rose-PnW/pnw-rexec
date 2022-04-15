@@ -120,6 +120,7 @@ export class BinExecutor implements Executor {
     return await p;
   }
   async pushSlow<R>(...requests: [keyof Query, BaseRequest<any, any>][]): Promise<R> {
+    const timeout = setTimeout(() => this.run(), this.interval);
     const res = await Promise.all(requests.map(([key, request]) => new Promise(res => {
       for(const bin of this.bins) {
         if(!bin.has(key)) return bin.push(key, request, res);
@@ -128,6 +129,7 @@ export class BinExecutor implements Executor {
       bin.push(key, request, res);
       this.bins.push(bin);
     }))) as [keyof Query, any][];
+    clearTimeout(timeout);
     return Object.fromEntries(res) as R;
   }
 }

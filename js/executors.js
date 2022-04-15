@@ -100,6 +100,7 @@ export class BinExecutor {
         return await p;
     }
     async pushSlow(...requests) {
+        const timeout = setTimeout(() => this.run(), this.interval);
         const res = await Promise.all(requests.map(([key, request]) => new Promise(res => {
             for (const bin of this.bins) {
                 if (!bin.has(key))
@@ -109,6 +110,7 @@ export class BinExecutor {
             bin.push(key, request, res);
             this.bins.push(bin);
         })));
+        clearTimeout(timeout);
         return Object.fromEntries(res);
     }
 }
