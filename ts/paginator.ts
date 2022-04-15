@@ -5,56 +5,43 @@ import { PaginatorInfo, Query } from "./types.js";
 
 type PaginatorType<T> = {
   data: T[];
-  paginatorInfo?: { hasMorePages: boolean };
+  paginatorInfo?: Partial<PaginatorInfo>;
 };
 export class PaginatorReturn<A extends {page?:number|null}, T, R> extends Array<R> {
-  page: number;
-  hasMorePages: boolean;
+  info: PaginatorInfo;
   query: QueryRequest<A, PaginatorType<T>, PaginatorType<R>>;
   constructor(res: PaginatorType<R> | undefined, query: QueryRequest<A, PaginatorType<T>, PaginatorType<R>>) {
     super();
     if(res) {
       this.push(...res.data);
     }
-    this.page = query.args.page ?? 1;
-    this.hasMorePages = res?.paginatorInfo?.hasMorePages ?? false;
+    this.info = {
+      count: res?.data.length ?? 1,
+      lastItem: (res?.data.length ?? 1) - 1,
+      currentPage: res?.paginatorInfo?.currentPage ?? 1,
+      hasMorePages: res?.paginatorInfo?.hasMorePages ?? false,
+      lastPage: res?.paginatorInfo?.lastPage ?? 1,
+      perPage: res?.paginatorInfo?.perPage ?? 0,
+      total: res?.paginatorInfo?.total ?? 0,
+    }
     this.query = query;
   }
   async fetchMore(): Promise<Partial<PaginatorInfo>> {
-    if(this.hasMorePages) {
-      this.page += 1;
+    if(this.info.hasMorePages) {
+      this.info.currentPage += 1;
       const q = this.query as any as QueryRequest<A & {page:number}, PaginatorType<T>, PaginatorType<R>>;
-      q.args.page = this.page;
+      q.args.page = this.info.currentPage;
       const req = [q.endpoint, q] as [keyof Query, QueryRequest<any, any, any>];
       const res = await config.executor.push(req) as {[K in string]: any};
       const end = res[q.endpoint] as PaginatorType<R>;
       this.push(...end.data);
-      this.hasMorePages = end.paginatorInfo?.hasMorePages ?? false;
-      return {
-        hasMorePages: this.hasMorePages,
-        firstItem: 0,
-        count: end.data.length,
-        lastItem: this.length - 1,
-        currentPage: this.page,
-      };
+      Object.assign(this.info, end.paginatorInfo);
     }
-    return {
-      hasMorePages: this.hasMorePages,
-      firstItem: 0,
-      count: 0,
-      lastItem: this.length - 1,
-      currentPage: this.page,
-    };
+    return this.info;
   }
   async fetchAll(): Promise<Partial<PaginatorInfo>> {
-    while(this.hasMorePages) await this.fetchMore();
-    return {
-      hasMorePages: this.hasMorePages,
-      firstItem: 0,
-      count: this.length,
-      lastItem: this.length - 1,
-      currentPage: this.page,
-    };
+    while(this.info.hasMorePages) await this.fetchMore();
+    return this.info;
   }
 }
 export class PaginatorRequest<A, T, R>
@@ -66,7 +53,7 @@ implements
     const r: Request<PaginatorType<T>, {}> = new Request();
     this.query = new QueryRequest(endpoint, args, r
       .child('data', () => request)
-      .child('paginatorInfo', p => p.fields('hasMorePages'))
+      .child('paginatorInfo', p => p.fields('hasMorePages','lastPage','perPage','lastItem','total'))
     );
   }
   stringify(): string {

@@ -3,15 +3,12 @@ import { BaseRequest, Request } from './request.js';
 import { PaginatorInfo } from "./types.js";
 declare type PaginatorType<T> = {
     data: T[];
-    paginatorInfo?: {
-        hasMorePages: boolean;
-    };
+    paginatorInfo?: Partial<PaginatorInfo>;
 };
 export declare class PaginatorReturn<A extends {
     page?: number | null;
 }, T, R> extends Array<R> {
-    page: number;
-    hasMorePages: boolean;
+    info: PaginatorInfo;
     query: QueryRequest<A, PaginatorType<T>, PaginatorType<R>>;
     constructor(res: PaginatorType<R> | undefined, query: QueryRequest<A, PaginatorType<T>, PaginatorType<R>>);
     fetchMore(): Promise<Partial<PaginatorInfo>>;
