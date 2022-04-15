@@ -1,6 +1,6 @@
-import { Query } from "./types";
 import fetch, { Response } from "node-fetch";
-import { BaseRequest } from "./request";
+import { BaseRequest } from "./request.js";
+import { Query } from "./types.js";
 
 export interface Executor {
   push<R>(...requests: [keyof Query, BaseRequest<any, any>][]): Promise<R>;
@@ -30,7 +30,7 @@ export class InstantExecutor implements Executor {
   async push<R>(...requests: [keyof Query, BaseRequest<any, any>][]): Promise<R> {
     while(true) {
       const queries: string[] = requests.map(([_, req]) => req.stringify());
-      const query = `{${queries.join(' ')}}`;
+      const query = `{${queries.join('')}}`;
       const response = await fetch(url(), {
         headers: {
           'Content-Type': 'application/json',
@@ -62,6 +62,66 @@ export class InstantExecutor implements Executor {
         }
       }
     }
+  }
+}
+
+interface SleepingRequest {
+  request: BaseRequest<any, any>,
+  resolve: (result: any) => void,
+}
+class ExecutorBin {
+  private requests: {[K in keyof Query]: SleepingRequest} = {};
+  private executor: Executor;
+  constructor(executor: Executor) {
+    this.executor = executor;
+  }
+  has(key: keyof Query): boolean {
+    return this.requests[key] !== undefined;
+  }
+  push(key: keyof Query, request: BaseRequest<any, any>, resolve: (result: any) => void) {
+    this.requests[key] = {
+      request,
+      resolve
+    };
+  }
+  async run() {
+    const requests = Object.entries(this.requests).map(([k, req]) => [k, req.request]) as [keyof Query, BaseRequest<any, any>][];
+    const result = await this.executor.push(...requests) as Query;
+    Object.entries(this.requests).forEach(([s, req]) => {
+      const k = s as keyof Query;
+      req.resolve([k, result[k]]);
+    });
+  }
+}
+export class BinExecutor implements Executor {
+  private bins: ExecutorBin[] = [];
+  private executor: Executor;
+  private running = false;
+  private interval: number;
+  constructor(executor: Executor, interval: number) {
+    this.executor = executor;
+    this.interval = interval;
+  }
+  private async run() {
+    if(!this.running) {
+      this.running = true;
+      await new Promise(resolve => setTimeout(resolve, this.interval));
+      await Promise.all(this.bins.map(bin => bin.run()));
+      this.bins = [];
+      this.running = false;
+    }
+  }
+  async push<R>(...requests: [keyof Query, BaseRequest<any, any>][]): Promise<R> {
+    this.run();
+    const res = await Promise.all(requests.map(([key, request]) => new Promise(res => {
+      for(const bin of this.bins) {
+        if(!bin.has(key)) return bin.push(key, request, res);
+      }
+      const bin = new ExecutorBin(this.executor);
+      bin.push(key, request, res);
+      this.bins.push(bin);
+    }))) as [keyof Query, any][];
+    return Object.fromEntries(res) as R;
   }
 }
 

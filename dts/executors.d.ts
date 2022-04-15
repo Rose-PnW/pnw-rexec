@@ -1,6 +1,6 @@
-import { Query } from "./types";
 import { Response } from "node-fetch";
-import { BaseRequest } from "./request";
+import { BaseRequest } from "./request.js";
+import { Query } from "./types.js";
 export interface Executor {
     push<R>(...requests: [keyof Query, BaseRequest<any, any>][]): Promise<R>;
 }
@@ -10,6 +10,15 @@ interface ExecutorLog {
     response: Response;
 }
 export declare class InstantExecutor implements Executor {
+    push<R>(...requests: [keyof Query, BaseRequest<any, any>][]): Promise<R>;
+}
+export declare class BinExecutor implements Executor {
+    private bins;
+    private executor;
+    private running;
+    private interval;
+    constructor(executor: Executor, interval: number);
+    private run;
     push<R>(...requests: [keyof Query, BaseRequest<any, any>][]): Promise<R>;
 }
 declare class RequesterConfig {

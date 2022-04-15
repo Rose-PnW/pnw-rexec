@@ -16,7 +16,7 @@ export class InstantExecutor {
     async push(...requests) {
         while (true) {
             const queries = requests.map(([_, req]) => req.stringify());
-            const query = `{${queries.join(' ')}}`;
+            const query = `{${queries.join('')}}`;
             const response = await fetch(url(), {
                 headers: {
                     'Content-Type': 'application/json',
@@ -51,6 +51,59 @@ export class InstantExecutor {
                 }
             }
         }
+    }
+}
+class ExecutorBin {
+    constructor(executor) {
+        this.requests = {};
+        this.executor = executor;
+    }
+    has(key) {
+        return this.requests[key] !== undefined;
+    }
+    push(key, request, resolve) {
+        this.requests[key] = {
+            request,
+            resolve
+        };
+    }
+    async run() {
+        const requests = Object.entries(this.requests).map(([k, req]) => [k, req.request]);
+        const result = await this.executor.push(...requests);
+        Object.entries(this.requests).forEach(([s, req]) => {
+            const k = s;
+            req.resolve([k, result[k]]);
+        });
+    }
+}
+export class BinExecutor {
+    constructor(executor, interval) {
+        this.bins = [];
+        this.running = false;
+        this.executor = executor;
+        this.interval = interval;
+    }
+    async run() {
+        if (!this.running) {
+            this.running = true;
+            await new Promise(resolve => setTimeout(resolve, this.interval));
+            await Promise.all(this.bins.map(bin => bin.run()));
+            this.bins = [];
+            this.running = false;
+        }
+    }
+    async push(...requests) {
+        this.run();
+        const res = await Promise.all(requests.map(([key, request]) => new Promise(res => {
+            for (const bin of this.bins) {
+                if (!bin.has(key))
+                    return bin.push(key, request, res);
+            }
+            const bin = new ExecutorBin(this.executor);
+            bin.push(key, request, res);
+            this.bins.push(bin);
+        })));
+        return Object.fromEntries(res);
     }
 }
 class RequesterConfig {
