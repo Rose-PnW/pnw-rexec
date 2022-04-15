@@ -5,29 +5,42 @@ import { PaginatorInfo, Query } from "./types.js";
 
 type PaginatorType<T> = {
   data: T[];
-  paginatorInfo?: PaginatorInfo;
+  paginatorInfo?: Partial<PaginatorInfo>;
 };
+interface ParsedPaginatorInfo<T> {
+  count: number,
+  currentPage: number,
+  firstItem?: T,
+  lastItem?: T,
+  hasMorePages: boolean,
+  lastPage: number,
+  perPage: number,
+  total: number,
+}
 export class PaginatorReturn<A extends {page?:number|null}, T, R> extends Array<R> {
-  info: PaginatorInfo;
+  info: ParsedPaginatorInfo<R>;
   query: QueryRequest<A, PaginatorType<T>, PaginatorType<R>>;
   constructor(res: PaginatorType<R> | undefined, query: QueryRequest<A, PaginatorType<T>, PaginatorType<R>>) {
     super();
     if(res) {
       this.push(...res.data);
     }
-    this.info = {
-      count: res?.paginatorInfo?.count ?? 0,
-      firstItem: res?.paginatorInfo?.firstItem,
-      lastItem: res?.paginatorInfo?.lastItem,
-      currentPage: res?.paginatorInfo?.currentPage ?? 1,
-      hasMorePages: res?.paginatorInfo?.hasMorePages ?? false,
-      lastPage: res?.paginatorInfo?.lastPage ?? 1,
-      perPage: res?.paginatorInfo?.perPage ?? 0,
-      total: res?.paginatorInfo?.total ?? 0,
-    }
+    this.info = this.parseInfo(res?.paginatorInfo);
     this.query = query;
   }
-  async fetchMore(): Promise<Partial<PaginatorInfo>> {
+  parseInfo(info: Partial<PaginatorInfo> | undefined): ParsedPaginatorInfo<R> {
+    return {
+      count: this.length,
+      firstItem: this.length > 0 ? this[0] : undefined,
+      lastItem: this.length > 0 ? this[this.length - 1] : undefined,
+      currentPage: info?.currentPage ?? 1,
+      hasMorePages: info?.hasMorePages ?? false,
+      lastPage: info?.lastPage ?? 1,
+      perPage: info?.perPage ?? 0,
+      total: info?.total ?? 0,
+    }
+  }
+  async fetchMore(): Promise<ParsedPaginatorInfo<R>> {
     if(this.info.hasMorePages) {
       this.info.currentPage += 1;
       const q = this.query as any as QueryRequest<A & {page:number}, PaginatorType<T>, PaginatorType<R>>;
@@ -36,12 +49,16 @@ export class PaginatorReturn<A extends {page?:number|null}, T, R> extends Array<
       const res = await config.executor.push(req) as {[K in string]: any};
       const end = res[q.endpoint] as PaginatorType<R>;
       this.push(...end.data);
-      Object.assign(this.info, end.paginatorInfo);
+      this.info = this.parseInfo(end.paginatorInfo);
     }
     return this.info;
   }
-  async fetchAll(): Promise<Partial<PaginatorInfo>> {
+  async fetchAll(): Promise<ParsedPaginatorInfo<R>> {
     while(this.info.hasMorePages) await this.fetchMore();
+    return this.info;
+  }
+  async fetchWhile(f: (info: ParsedPaginatorInfo<R>) => boolean) {
+    while(f(this.info)) await this.fetchMore();
     return this.info;
   }
 }
@@ -55,8 +72,7 @@ implements
     this.query = new QueryRequest(endpoint, args, r
       .child('data', () => request)
       .child('paginatorInfo', p => p.fields(
-        'firstItem','count','lastItem','total',
-        'currentPage','perPage','lastPage','hasMorePages'
+        'total','currentPage','perPage','lastPage','hasMorePages'
       ))
     );
   }

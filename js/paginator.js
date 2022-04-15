@@ -7,17 +7,20 @@ export class PaginatorReturn extends Array {
         if (res) {
             this.push(...res.data);
         }
-        this.info = {
-            count: res?.paginatorInfo?.count ?? 0,
-            firstItem: res?.paginatorInfo?.firstItem,
-            lastItem: res?.paginatorInfo?.lastItem,
-            currentPage: res?.paginatorInfo?.currentPage ?? 1,
-            hasMorePages: res?.paginatorInfo?.hasMorePages ?? false,
-            lastPage: res?.paginatorInfo?.lastPage ?? 1,
-            perPage: res?.paginatorInfo?.perPage ?? 0,
-            total: res?.paginatorInfo?.total ?? 0,
-        };
+        this.info = this.parseInfo(res?.paginatorInfo);
         this.query = query;
+    }
+    parseInfo(info) {
+        return {
+            count: this.length,
+            firstItem: this.length > 0 ? this[0] : undefined,
+            lastItem: this.length > 0 ? this[this.length - 1] : undefined,
+            currentPage: info?.currentPage ?? 1,
+            hasMorePages: info?.hasMorePages ?? false,
+            lastPage: info?.lastPage ?? 1,
+            perPage: info?.perPage ?? 0,
+            total: info?.total ?? 0,
+        };
     }
     async fetchMore() {
         if (this.info.hasMorePages) {
@@ -28,12 +31,17 @@ export class PaginatorReturn extends Array {
             const res = await config.executor.push(req);
             const end = res[q.endpoint];
             this.push(...end.data);
-            Object.assign(this.info, end.paginatorInfo);
+            this.info = this.parseInfo(end.paginatorInfo);
         }
         return this.info;
     }
     async fetchAll() {
         while (this.info.hasMorePages)
+            await this.fetchMore();
+        return this.info;
+    }
+    async fetchWhile(f) {
+        while (f(this.info))
             await this.fetchMore();
         return this.info;
     }
@@ -43,7 +51,7 @@ export class PaginatorRequest {
         const r = new Request();
         this.query = new QueryRequest(endpoint, args, r
             .child('data', () => request)
-            .child('paginatorInfo', p => p.fields('firstItem', 'count', 'lastItem', 'total', 'currentPage', 'perPage', 'lastPage', 'hasMorePages')));
+            .child('paginatorInfo', p => p.fields('total', 'currentPage', 'perPage', 'lastPage', 'hasMorePages')));
     }
     stringify() {
         return this.query.stringify();
