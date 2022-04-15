@@ -1,4 +1,4 @@
-import { config } from './executors.js';
+import { requesterConfig } from './executors.js';
 import { PaginatorRequest } from './paginator.js';
 import { Request, stringifyArgs } from './request.js';
 export class QueryRequest {
@@ -20,7 +20,6 @@ export class QueryRequest {
         return this.request.parse(res);
     }
 }
-;
 export class RequestBuilder {
     constructor() {
         this.requests = {};
@@ -112,12 +111,6 @@ export class RequestBuilder {
     }
     async send() {
         const entries = Object.entries(this.requests);
-        return await config.executor.push(...entries);
+        return await requesterConfig.executor.push(...entries);
     }
 }
-setTimeout(async () => {
-    const { nations } = await new RequestBuilder().nations({}, (n) => n.fields('nation_name')).send();
-    console.log('First page', JSON.stringify(nations));
-    await nations.fetchMore();
-    console.log('Second page', JSON.stringify(nations));
-}, 5000);

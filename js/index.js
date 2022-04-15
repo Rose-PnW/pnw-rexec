@@ -1,4 +1,4 @@
-import { config, InstantExecutor } from "./executors.js";
+import { requesterConfig, InstantExecutor } from "./executors.js";
 import * as types from './types.js';
 import { RequestBuilder } from "./queries.js";
-export { config, types, InstantExecutor, RequestBuilder };
+export { requesterConfig, types, InstantExecutor, RequestBuilder };

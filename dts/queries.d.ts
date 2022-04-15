@@ -1,6 +1,6 @@
 import { PaginatorReturn } from './paginator.js';
 import { BaseRequest, Request } from './request.js';
-import { Query, City, Color, GameInfo, ApiKeyDetails, Bounty, Trade, Treasure, Treaty, Alliance, QueryAlliancesArgs, Bankrec, QueryBankrecsArgs, Nation, QueryNationsArgs, BbGame, QueryBaseball_GamesArgs, BbPlayer, QueryBaseball_PlayersArgs, BbTeam, QueryBaseball_TeamsArgs, QueryBountiesArgs, QueryCitiesArgs, Tradeprice, QueryTradepricesArgs, QueryTradesArgs, QueryTreatiesArgs, WarAttack, QueryWarattacksArgs, War, QueryWarsArgs } from './types';
+import { City, Color, GameInfo, ApiKeyDetails, Bounty, Trade, Treasure, Treaty, Alliance, QueryAlliancesArgs, Bankrec, QueryBankrecsArgs, Nation, QueryNationsArgs, BbGame, QueryBaseball_GamesArgs, BbPlayer, QueryBaseball_PlayersArgs, BbTeam, QueryBaseball_TeamsArgs, QueryBountiesArgs, QueryCitiesArgs, Tradeprice, QueryTradepricesArgs, QueryTradesArgs, QueryTreatiesArgs, WarAttack, QueryWarattacksArgs, War, QueryWarsArgs } from './types';
 export declare class QueryRequest<A, T, R> implements BaseRequest<T, R> {
     endpoint: string;
     args: A;
@@ -9,15 +9,8 @@ export declare class QueryRequest<A, T, R> implements BaseRequest<T, R> {
     stringify(): string;
     parse(res: T): R | undefined;
 }
-export interface RequestBuilder<Response> {
-    requests: {
-        [K in keyof Query]: BaseRequest<any, any>;
-    };
-}
 export declare class RequestBuilder<Response = {}> {
-    requests: {
-        [K in keyof Query]: BaseRequest<any, any>;
-    };
+    private requests;
     me<R>(f: (req: Request<ApiKeyDetails, {}>) => Request<ApiKeyDetails, R>): RequestBuilder<Response & {
         me: R;
     }>;

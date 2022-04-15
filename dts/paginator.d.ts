@@ -18,10 +18,10 @@ interface ParsedPaginatorInfo<T> {
 export declare class PaginatorReturn<A extends {
     page?: number | null;
 }, T, R> extends Array<R> {
+    #private;
     info: ParsedPaginatorInfo<R>;
-    query: QueryRequest<A, PaginatorType<T>, PaginatorType<R>>;
+    private query;
     constructor(res: PaginatorType<R> | undefined, query: QueryRequest<A, PaginatorType<T>, PaginatorType<R>>);
-    parseInfo(info: Partial<PaginatorInfo> | undefined): ParsedPaginatorInfo<R>;
     fetchMore(): Promise<ParsedPaginatorInfo<R>>;
     fetchAll(): Promise<ParsedPaginatorInfo<R>>;
     fetchWhile(f: (info: ParsedPaginatorInfo<R>) => boolean): Promise<ParsedPaginatorInfo<R>>;

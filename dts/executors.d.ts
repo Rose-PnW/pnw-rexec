@@ -20,5 +20,5 @@ declare class RequesterConfig {
     withKey(key: string): void;
     withLog(log: (log: ExecutorLog) => void): void;
 }
-export declare const config: RequesterConfig;
+export declare const requesterConfig: RequesterConfig;
 export {};

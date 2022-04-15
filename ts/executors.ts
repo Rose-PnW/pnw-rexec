@@ -7,8 +7,8 @@ export interface Executor {
 }
 
 function url() {
-  if(config.key) {
-    return `https://api.politicsandwar.com/graphql?api_key=${config.key}`;
+  if(requesterConfig.key) {
+    return `https://api.politicsandwar.com/graphql?api_key=${requesterConfig.key}`;
   } else {
     throw new Error("No API key provided");
   }
@@ -43,7 +43,7 @@ export class InstantExecutor implements Executor {
         query,
         response
       };
-      config.log?.(log);
+      requesterConfig.log?.(log);
       if(response.ok) {
         const query = await response.json() as { data: Query, errors: any[] };
         if(query.errors?.length > 0) {
@@ -80,4 +80,4 @@ class RequesterConfig {
   }
 }
 
-export const config = new RequesterConfig();
+export const requesterConfig = new RequesterConfig();

@@ -1,4 +1,4 @@
-import { config } from './executors.js';
+import { requesterConfig } from './executors.js';
 import { QueryRequest } from './queries.js';
 import { BaseRequest, Request } from './request.js';
 import { PaginatorInfo, Query } from "./types.js";
@@ -19,16 +19,16 @@ interface ParsedPaginatorInfo<T> {
 }
 export class PaginatorReturn<A extends {page?:number|null}, T, R> extends Array<R> {
   info: ParsedPaginatorInfo<R>;
-  query: QueryRequest<A, PaginatorType<T>, PaginatorType<R>>;
+  private query: QueryRequest<A, PaginatorType<T>, PaginatorType<R>>;
   constructor(res: PaginatorType<R> | undefined, query: QueryRequest<A, PaginatorType<T>, PaginatorType<R>>) {
     super();
     if(res) {
       this.push(...res.data);
     }
-    this.info = this.parseInfo(res?.paginatorInfo);
+    this.info = this.#parseInfo(res?.paginatorInfo);
     this.query = query;
   }
-  parseInfo(info: Partial<PaginatorInfo> | undefined): ParsedPaginatorInfo<R> {
+  #parseInfo(info: Partial<PaginatorInfo> | undefined): ParsedPaginatorInfo<R> {
     return {
       count: this.length,
       firstItem: this.length > 0 ? this[0] : undefined,
@@ -46,10 +46,10 @@ export class PaginatorReturn<A extends {page?:number|null}, T, R> extends Array<
       const q = this.query as any as QueryRequest<A & {page:number}, PaginatorType<T>, PaginatorType<R>>;
       q.args.page = this.info.currentPage;
       const req = [q.endpoint, q] as [keyof Query, QueryRequest<any, any, any>];
-      const res = await config.executor.push(req) as {[K in string]: any};
+      const res = await requesterConfig.executor.push(req) as {[K in string]: any};
       const end = res[q.endpoint] as PaginatorType<R>;
       this.push(...end.data);
-      this.info = this.parseInfo(end.paginatorInfo);
+      this.info = this.#parseInfo(end.paginatorInfo);
     }
     return this.info;
   }

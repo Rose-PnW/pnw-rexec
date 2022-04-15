@@ -1,4 +1,4 @@
-import { config } from './executors.js';
+import { requesterConfig } from './executors.js';
 import { PaginatorRequest, PaginatorReturn } from './paginator.js';
 import { BaseRequest, Request, stringifyArgs } from './request.js';
 import {
@@ -42,12 +42,8 @@ implements
   }
 }
 
-export interface RequestBuilder<Response> {
-  requests: { [K in keyof Query]: BaseRequest<any, any> };
-};
-
 export class RequestBuilder<Response = {}> {
-  requests: { [K in keyof Query]: BaseRequest<any, any> } = {};
+  private requests: { [K in keyof Query]: BaseRequest<any, any> } = {};
   me<R> (
       f: (req: Request<ApiKeyDetails, {}>) => Request<ApiKeyDetails, R>
   ): RequestBuilder<Response & {me: R}> {
@@ -178,13 +174,6 @@ export class RequestBuilder<Response = {}> {
   }
   async send(): Promise<Response> {
     const entries = Object.entries(this.requests) as [keyof Query, BaseRequest<any, any>][];
-    return await config.executor.push(...entries);
+    return await requesterConfig.executor.push(...entries);
   }
 }
-
-setTimeout(async () => {
-  const { nations } = await new RequestBuilder().nations({}, (n) => n.fields('nation_name')).send();
-  console.log('First page', JSON.stringify(nations));
-  await nations.fetchMore();
-  console.log('Second page', JSON.stringify(nations));
-}, 5000);

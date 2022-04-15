@@ -1,7 +1,7 @@
 import fetch from "node-fetch";
 function url() {
-    if (config.key) {
-        return `https://api.politicsandwar.com/graphql?api_key=${config.key}`;
+    if (requesterConfig.key) {
+        return `https://api.politicsandwar.com/graphql?api_key=${requesterConfig.key}`;
     }
     else {
         throw new Error("No API key provided");
@@ -29,7 +29,7 @@ export class InstantExecutor {
                 query,
                 response
             };
-            config.log?.(log);
+            requesterConfig.log?.(log);
             if (response.ok) {
                 const query = await response.json();
                 if (query.errors?.length > 0) {
@@ -67,4 +67,4 @@ class RequesterConfig {
         this.log = log;
     }
 }
-export const config = new RequesterConfig();
+export const requesterConfig = new RequesterConfig();
