@@ -5,6 +5,7 @@ type PrimitiveKeys<T> = {[K in keyof T]: T[K] extends string | number | boolean 
 export interface BaseRequest<ApiType, Return> {
   stringify(): string;
   parse(response: ApiType | null): Return | undefined;
+  hash(): number;
 }
 export class Request<ApiType, Return>
 implements
@@ -31,20 +32,34 @@ implements
     return r;
   }
   stringify(): string {
-    return this._fields.join(' ');
+    return this._fields.sort().join(' ');
   }
   parse(response: ApiType | null): Return | undefined {
     if(response) {
       return response as any as Return;
     }
   }
+  hash(): number {
+    const s = this.stringify();
+    let hash = 0;
+    for(const c of s) hash = ((hash << 5) - hash) + c.charCodeAt(0);
+    return hash;
+  }
 }
 
 export function stringifyArgs<A>(args: A): string {
   if(Array.isArray(args)) {
-    return `[${args.map((v) => `${stringifyArgs(v)}`).join(',')}]`;
+    return `[${args
+      .sort()
+      .map((v) => `${stringifyArgs(v)}`)
+      .join(',')
+    }]`;
   } else if(typeof args === 'object') {
-    return `{${Object.entries(args).map(([k, v]) =>  `${k}:${stringifyArgs(v)}`).join(' ')}}`;
+    return `{${Object
+      .entries(args)
+      .sort(([a],[b])=> a > b ? -1 : a===b ? 0 : 1)
+      .map(([k, v]) =>  `${k}:${stringifyArgs(v)}`).join(' ')
+    }}`;
   } else {
     return String(args);
   }

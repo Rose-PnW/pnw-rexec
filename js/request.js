@@ -17,20 +17,33 @@ export class Request {
         return r;
     }
     stringify() {
-        return this._fields.join(' ');
+        return this._fields.sort().join(' ');
     }
     parse(response) {
         if (response) {
             return response;
         }
     }
+    hash() {
+        const s = this.stringify();
+        let hash = 0;
+        for (const c of s)
+            hash = ((hash << 5) - hash) + c.charCodeAt(0);
+        return hash;
+    }
 }
 export function stringifyArgs(args) {
     if (Array.isArray(args)) {
-        return `[${args.map((v) => `${stringifyArgs(v)}`).join(',')}]`;
+        return `[${args
+            .sort()
+            .map((v) => `${stringifyArgs(v)}`)
+            .join(',')}]`;
     }
     else if (typeof args === 'object') {
-        return `{${Object.entries(args).map(([k, v]) => `${k}:${stringifyArgs(v)}`).join(' ')}}`;
+        return `{${Object
+            .entries(args)
+            .sort(([a], [b]) => a > b ? -1 : a === b ? 0 : 1)
+            .map(([k, v]) => `${k}:${stringifyArgs(v)}`).join(' ')}}`;
     }
     else {
         return String(args);

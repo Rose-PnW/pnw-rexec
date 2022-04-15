@@ -83,4 +83,7 @@ implements
     const r = this.query.parse(res);
     return new PaginatorReturn(r, this.query);
   }
+  hash(): number {
+    return this.query.hash();
+  }
 }

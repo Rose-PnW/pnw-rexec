@@ -17,10 +17,18 @@ export declare class InstantExecutor implements Executor {
 export declare class BinExecutor implements Executor {
     private bins;
     private executor;
-    private running;
     private interval;
     constructor(executor: Executor, interval: number);
     private run;
+    push<R>(...requests: [keyof Query, BaseRequest<any, any>][]): Promise<R>;
+    pushSlow<R>(...requests: [keyof Query, BaseRequest<any, any>][]): Promise<R>;
+}
+export declare class CacheExecutor implements Executor {
+    private executor;
+    private cache;
+    private lifetime;
+    constructor(executor: Executor, lifetime: number);
+    private tryCache;
     push<R>(...requests: [keyof Query, BaseRequest<any, any>][]): Promise<R>;
     pushSlow<R>(...requests: [keyof Query, BaseRequest<any, any>][]): Promise<R>;
 }

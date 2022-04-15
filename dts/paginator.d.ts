@@ -31,5 +31,6 @@ export declare class PaginatorRequest<A, T, R> implements BaseRequest<PaginatorT
     constructor(endpoint: string, args: A, request: Request<T, R>);
     stringify(): string;
     parse(res: PaginatorType<T>): PaginatorReturn<A, T, R> | undefined;
+    hash(): number;
 }
 export {};

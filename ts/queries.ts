@@ -40,6 +40,14 @@ implements
   parse(res: T): R | undefined {
     return this.request.parse(res);
   }
+  hash(): number {
+    const args = stringifyArgs(this.args);
+    const req = this.request.hash();
+    let hash = 0;
+    for(const c of args) hash = ((hash << 5) - hash) + c.charCodeAt(0);
+    hash = ((hash << 5) - hash) + req;
+    return hash;
+  }
 }
 
 export class RequestBuilder<Response = {}> {

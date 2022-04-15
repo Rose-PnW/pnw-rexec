@@ -8,6 +8,7 @@ export declare class QueryRequest<A, T, R> implements BaseRequest<T, R> {
     constructor(endpoint: string, args: A, request: Request<T, R>);
     stringify(): string;
     parse(res: T): R | undefined;
+    hash(): number;
 }
 export declare class RequestBuilder<Response = {}> {
     private requests;

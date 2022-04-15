@@ -67,4 +67,7 @@ export class PaginatorRequest {
         const r = this.query.parse(res);
         return new PaginatorReturn(r, this.query);
     }
+    hash() {
+        return this.query.hash();
+    }
 }

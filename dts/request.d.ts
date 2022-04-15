@@ -7,6 +7,7 @@ declare type PrimitiveKeys<T> = {
 export interface BaseRequest<ApiType, Return> {
     stringify(): string;
     parse(response: ApiType | null): Return | undefined;
+    hash(): number;
 }
 export declare class Request<ApiType, Return> implements BaseRequest<ApiType, Return> {
     _fields: string[];
@@ -19,6 +20,7 @@ export declare class Request<ApiType, Return> implements BaseRequest<ApiType, Re
     }>;
     stringify(): string;
     parse(response: ApiType | null): Return | undefined;
+    hash(): number;
 }
 export declare function stringifyArgs<A>(args: A): string;
 export {};

@@ -82,17 +82,13 @@ class ExecutorBin {
 export class BinExecutor {
     constructor(executor, interval) {
         this.bins = [];
-        this.running = false;
         this.executor = executor;
         this.interval = interval;
     }
     async run() {
-        if (!this.running) {
-            this.running = true;
-            await Promise.all(this.bins.map(bin => bin.run()));
-            this.bins = [];
-            this.running = false;
-        }
+        const bins = this.bins;
+        this.bins = [];
+        await Promise.all(bins.map(bin => bin.run()));
     }
     async push(...requests) {
         const p = this.pushSlow(...requests);
@@ -111,6 +107,36 @@ export class BinExecutor {
             this.bins.push(bin);
         })));
         clearTimeout(timeout);
+        return Object.fromEntries(res);
+    }
+}
+export class CacheExecutor {
+    constructor(executor, lifetime) {
+        this.cache = {};
+        this.executor = executor;
+        this.lifetime = lifetime;
+    }
+    async tryCache(key, request, get) {
+        const hash = request.hash();
+        const w = (v, f) => v ? f(v) : undefined;
+        this.cache[key] ??= {};
+        const cached = this.cache[key]?.[hash];
+        if (cached) {
+            return [key, cached];
+        }
+        else {
+            const result = await get([key, request]);
+            w(this.cache[key], (c) => c[hash] = result[key]);
+            setTimeout(() => delete this.cache[key]?.[hash], this.lifetime);
+            return [key, result[key]];
+        }
+    }
+    async push(...requests) {
+        const res = await Promise.all(requests.map(([key, request]) => this.tryCache(key, request, (r) => this.executor.push(r))));
+        return Object.fromEntries(res);
+    }
+    async pushSlow(...requests) {
+        const res = await Promise.all(requests.map(([key, request]) => this.tryCache(key, request, (r) => this.executor.pushSlow(r))));
         return Object.fromEntries(res);
     }
 }

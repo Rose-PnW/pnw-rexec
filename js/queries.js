@@ -19,6 +19,15 @@ export class QueryRequest {
     parse(res) {
         return this.request.parse(res);
     }
+    hash() {
+        const args = stringifyArgs(this.args);
+        const req = this.request.hash();
+        let hash = 0;
+        for (const c of args)
+            hash = ((hash << 5) - hash) + c.charCodeAt(0);
+        hash = ((hash << 5) - hash) + req;
+        return hash;
+    }
 }
 export class RequestBuilder {
     constructor() {

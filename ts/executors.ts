@@ -1,6 +1,6 @@
 import fetch, { Response } from "node-fetch";
 import { BaseRequest } from "./request.js";
-import { Query } from "./types.js";
+import { Query, TradeType } from "./types.js";
 
 export interface Executor {
   push<R>(...requests: [keyof Query, BaseRequest<any, any>][]): Promise<R>;
@@ -73,6 +73,7 @@ interface SleepingRequest {
   request: BaseRequest<any, any>,
   resolve: (result: any) => void,
 }
+
 class ExecutorBin {
   private requests: {[K in keyof Query]: SleepingRequest} = {};
   private executor: Executor;
@@ -97,22 +98,19 @@ class ExecutorBin {
     });
   }
 }
+
 export class BinExecutor implements Executor {
   private bins: ExecutorBin[] = [];
   private executor: Executor;
-  private running = false;
   private interval: number;
   constructor(executor: Executor, interval: number) {
     this.executor = executor;
     this.interval = interval;
   }
   private async run() {
-    if(!this.running) {
-      this.running = true;
-      await Promise.all(this.bins.map(bin => bin.run()));
-      this.bins = [];
-      this.running = false;
-    }
+    const bins = this.bins;
+    this.bins = [];
+    await Promise.all(bins.map(bin => bin.run()));
   }
   async push<R>(...requests: [keyof Query, BaseRequest<any, any>][]): Promise<R> {
     const p = this.pushSlow(...requests) as Promise<R>;
@@ -130,6 +128,42 @@ export class BinExecutor implements Executor {
       this.bins.push(bin);
     }))) as [keyof Query, any][];
     clearTimeout(timeout);
+    return Object.fromEntries(res) as R;
+  }
+}
+
+export class CacheExecutor implements Executor {
+  private executor: Executor;
+  private cache: {[K in keyof Query]: {[k: number]: any}} = {};
+  private lifetime: number;
+  constructor(executor: Executor, lifetime: number) {
+    this.executor = executor;
+    this.lifetime = lifetime;
+  }
+  private async tryCache(
+    key: keyof Query,
+    request: BaseRequest<any, any>,
+    get: (request: [keyof Query, BaseRequest<any, any>]) => Promise<Query>
+  ): Promise<any> {
+    const hash = request.hash();
+    const w = <T, R>(v: T, f: (v: NonNullable<T>) => R): R | undefined => v ? f(v as NonNullable<T>) : undefined;
+    this.cache[key] ??= {};
+    const cached = this.cache[key]?.[hash];
+    if(cached) {
+      return [key, cached];
+    } else {
+      const result = await get([key, request]);
+      w(this.cache[key], (c) => c[hash] = result[key]);
+      setTimeout(() => delete this.cache[key]?.[hash], this.lifetime);
+      return [key, result[key]];
+    }
+  }
+  async push<R>(...requests: [keyof Query, BaseRequest<any, any>][]): Promise<R> {
+    const res = await Promise.all(requests.map(([key, request]) => this.tryCache(key, request, (r) => this.executor.push(r))));
+    return Object.fromEntries(res) as R;
+  }
+  async pushSlow<R>(...requests: [keyof Query, BaseRequest<any, any>][]): Promise<R> {
+    const res = await Promise.all(requests.map(([key, request]) => this.tryCache(key, request, (r) => this.executor.pushSlow(r))));
     return Object.fromEntries(res) as R;
   }
 }
