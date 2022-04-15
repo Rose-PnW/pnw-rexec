@@ -8,8 +8,9 @@ export class PaginatorReturn extends Array {
             this.push(...res.data);
         }
         this.info = {
-            count: res?.data.length ?? 1,
-            lastItem: (res?.data.length ?? 1) - 1,
+            count: res?.paginatorInfo?.count ?? 0,
+            firstItem: res?.paginatorInfo?.firstItem,
+            lastItem: res?.paginatorInfo?.lastItem,
             currentPage: res?.paginatorInfo?.currentPage ?? 1,
             hasMorePages: res?.paginatorInfo?.hasMorePages ?? false,
             lastPage: res?.paginatorInfo?.lastPage ?? 1,
@@ -42,7 +43,7 @@ export class PaginatorRequest {
         const r = new Request();
         this.query = new QueryRequest(endpoint, args, r
             .child('data', () => request)
-            .child('paginatorInfo', p => p.fields('hasMorePages', 'lastPage', 'perPage', 'lastItem', 'total')));
+            .child('paginatorInfo', p => p.fields('firstItem', 'count', 'lastItem', 'total', 'currentPage', 'perPage', 'lastPage', 'hasMorePages')));
     }
     stringify() {
         return this.query.stringify();

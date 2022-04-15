@@ -3,7 +3,7 @@ import { BaseRequest, Request } from './request.js';
 import { PaginatorInfo } from "./types.js";
 declare type PaginatorType<T> = {
     data: T[];
-    paginatorInfo?: Partial<PaginatorInfo>;
+    paginatorInfo?: PaginatorInfo;
 };
 export declare class PaginatorReturn<A extends {
     page?: number | null;
