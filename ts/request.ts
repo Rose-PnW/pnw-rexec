@@ -2,7 +2,14 @@ type Child<T> = T extends (infer U)[] ? NonNullable<U> : NonNullable<T>;
 type ChildReturn<T, R> = T extends any[] ? R[] : R;
 type ChildrenKeys<T> = Exclude<keyof T, PrimitiveKeys<T>>;
 type PrimitiveKeys<T> = {[K in keyof T]: T[K] extends string | number | boolean | null | undefined ? K : never}[keyof T];
-export class Request<ApiType, Return> {
+export interface BaseRequest<ApiType, Return> {
+  stringify(): string;
+  parse(response: ApiType | null): Return | undefined;
+}
+export class Request<ApiType, Return>
+implements
+  BaseRequest<ApiType, Return>
+{
   _fields: string[] = [];
   static new<T, R>(): Request<T, R> {
     return new Request<T, R>();
@@ -30,5 +37,15 @@ export class Request<ApiType, Return> {
     if(response) {
       return response as any as Return;
     }
+  }
+}
+
+export function stringifyArgs<A>(args: A): string {
+  if(Array.isArray(args)) {
+    return `[${args.map((v) => `${stringifyArgs(v)}`).join(',')}]`;
+  } else if(typeof args === 'object') {
+    return `{${Object.entries(args).map(([k, v]) =>  `${k}:${stringifyArgs(v)}`).join(' ')}}`;
+  } else {
+    return String(args);
   }
 }

@@ -4,7 +4,11 @@ declare type ChildrenKeys<T> = Exclude<keyof T, PrimitiveKeys<T>>;
 declare type PrimitiveKeys<T> = {
     [K in keyof T]: T[K] extends string | number | boolean | null | undefined ? K : never;
 }[keyof T];
-export declare class Request<ApiType, Return> {
+export interface BaseRequest<ApiType, Return> {
+    stringify(): string;
+    parse(response: ApiType | null): Return | undefined;
+}
+export declare class Request<ApiType, Return> implements BaseRequest<ApiType, Return> {
     _fields: string[];
     static new<T, R>(): Request<T, R>;
     fields<F extends PrimitiveKeys<ApiType>>(...fields: F[]): Request<ApiType, Return & {
@@ -16,4 +20,5 @@ export declare class Request<ApiType, Return> {
     stringify(): string;
     parse(response: ApiType | null): Return | undefined;
 }
+export declare function stringifyArgs<A>(args: A): string;
 export {};

@@ -1,6 +1,7 @@
-import { Request } from './request.js';
-import { AlliancePaginator, ApiKeyDetails, BankrecPaginator, BbGamePaginator, BbPlayerPaginator, BbTeamPaginator, BountyPaginator, CityPaginator, Color, GameInfo, NationPaginator, Query, QueryAlliancesArgs, QueryBankrecsArgs, QueryBaseball_GamesArgs, QueryBaseball_PlayersArgs, QueryBaseball_TeamsArgs, QueryBountiesArgs, QueryCitiesArgs, QueryNationsArgs, QueryTradepricesArgs, QueryTradesArgs, QueryTreatiesArgs, QueryWarattacksArgs, QueryWarsArgs, TradePaginator, TradepricePaginator, Treasure, TreatyPaginator, WarAttackPaginator, WarPaginator } from './types';
-export declare class QueryRequest<A, T, R> {
+import { PaginatorReturn } from './paginator.js';
+import { BaseRequest, Request } from './request.js';
+import { Query, City, Color, GameInfo, ApiKeyDetails, Bounty, Trade, Treasure, Treaty, Alliance, QueryAlliancesArgs, Bankrec, QueryBankrecsArgs, Nation, QueryNationsArgs, BbGame, QueryBaseball_GamesArgs, BbPlayer, QueryBaseball_PlayersArgs, BbTeam, QueryBaseball_TeamsArgs, QueryBountiesArgs, QueryCitiesArgs, Tradeprice, QueryTradepricesArgs, QueryTradesArgs, QueryTreatiesArgs, WarAttack, QueryWarattacksArgs, War, QueryWarsArgs } from './types';
+export declare class QueryRequest<A, T, R> implements BaseRequest<T, R> {
     endpoint: string;
     args: A;
     request: Request<T, R>;
@@ -10,12 +11,12 @@ export declare class QueryRequest<A, T, R> {
 }
 export interface RequestBuilder<Response> {
     requests: {
-        [K in keyof Query]: QueryRequest<any, any, any>;
+        [K in keyof Query]: BaseRequest<any, any>;
     };
 }
 export declare class RequestBuilder<Response = {}> {
     requests: {
-        [K in keyof Query]: QueryRequest<any, any, any>;
+        [K in keyof Query]: BaseRequest<any, any>;
     };
     me<R>(f: (req: Request<ApiKeyDetails, {}>) => Request<ApiKeyDetails, R>): RequestBuilder<Response & {
         me: R;
@@ -29,44 +30,44 @@ export declare class RequestBuilder<Response = {}> {
     game_info<R>(f: (req: Request<GameInfo, {}>) => Request<GameInfo, R>): RequestBuilder<Response & {
         game_info: R;
     }>;
-    nations<R>(args: QueryNationsArgs, f: (req: Request<NationPaginator, {}>) => Request<NationPaginator, R>): RequestBuilder<Response & {
-        nations: R;
+    nations<R>(args: QueryNationsArgs, f: (req: Request<Nation, {}>) => Request<Nation, R>): RequestBuilder<Response & {
+        nations: PaginatorReturn<QueryNationsArgs, Nation, R>;
     }>;
-    alliances<R>(args: QueryAlliancesArgs, f: (req: Request<AlliancePaginator, {}>) => Request<AlliancePaginator, R>): RequestBuilder<Response & {
-        alliances: R;
+    alliances<R>(args: QueryAlliancesArgs, f: (req: Request<Alliance, {}>) => Request<Alliance, R>): RequestBuilder<Response & {
+        alliances: PaginatorReturn<QueryAlliancesArgs, Alliance, R>;
     }>;
-    tradeprices<R>(args: QueryTradepricesArgs, f: (req: Request<TradepricePaginator, {}>) => Request<TradepricePaginator, R>): RequestBuilder<Response & {
-        tradeprices: R;
+    tradeprices<R>(args: QueryTradepricesArgs, f: (req: Request<Tradeprice, {}>) => Request<Tradeprice, R>): RequestBuilder<Response & {
+        tradeprices: PaginatorReturn<QueryTradepricesArgs, Tradeprice, R>;
     }>;
-    trades<R>(args: QueryTradesArgs, f: (req: Request<TradePaginator, {}>) => Request<TradePaginator, R>): RequestBuilder<Response & {
-        trades: R;
+    trades<R>(args: QueryTradesArgs, f: (req: Request<Trade, {}>) => Request<Trade, R>): RequestBuilder<Response & {
+        trades: PaginatorReturn<QueryTradesArgs, Trade, R>;
     }>;
-    wars<R>(args: QueryWarsArgs, f: (req: Request<WarPaginator, {}>) => Request<WarPaginator, R>): RequestBuilder<Response & {
-        wars: R;
+    wars<R>(args: QueryWarsArgs, f: (req: Request<War, {}>) => Request<War, R>): RequestBuilder<Response & {
+        wars: PaginatorReturn<QueryWarsArgs, War, R>;
     }>;
-    bounties<R>(args: QueryBountiesArgs, f: (req: Request<BountyPaginator, {}>) => Request<BountyPaginator, R>): RequestBuilder<Response & {
-        bounties: R;
+    bounties<R>(args: QueryBountiesArgs, f: (req: Request<Bounty, {}>) => Request<Bounty, R>): RequestBuilder<Response & {
+        bounties: PaginatorReturn<QueryBountiesArgs, Bounty, R>;
     }>;
-    warattacks<R>(args: QueryWarattacksArgs, f: (req: Request<WarAttackPaginator, {}>) => Request<WarAttackPaginator, R>): RequestBuilder<Response & {
-        warattacks: R;
+    warattacks<R>(args: QueryWarattacksArgs, f: (req: Request<WarAttack, {}>) => Request<WarAttack, R>): RequestBuilder<Response & {
+        warattacks: PaginatorReturn<QueryWarattacksArgs, WarAttack, R>;
     }>;
-    treaties<R>(args: QueryTreatiesArgs, f: (req: Request<TreatyPaginator, {}>) => Request<TreatyPaginator, R>): RequestBuilder<Response & {
-        treaties: R;
+    treaties<R>(args: QueryTreatiesArgs, f: (req: Request<Treaty, {}>) => Request<Treaty, R>): RequestBuilder<Response & {
+        treaties: PaginatorReturn<QueryTreatiesArgs, Treaty, R>;
     }>;
-    cities<R>(args: QueryCitiesArgs, f: (req: Request<CityPaginator, {}>) => Request<CityPaginator, R>): RequestBuilder<Response & {
-        cities: R;
+    cities<R>(args: QueryCitiesArgs, f: (req: Request<City, {}>) => Request<City, R>): RequestBuilder<Response & {
+        cities: PaginatorReturn<QueryCitiesArgs, City, R>;
     }>;
-    bankrecs<R>(args: QueryBankrecsArgs, f: (req: Request<BankrecPaginator, {}>) => Request<BankrecPaginator, R>): RequestBuilder<Response & {
-        bankrecs: R;
+    bankrecs<R>(args: QueryBankrecsArgs, f: (req: Request<Bankrec, {}>) => Request<Bankrec, R>): RequestBuilder<Response & {
+        bankrecs: PaginatorReturn<QueryBankrecsArgs, Bankrec, R>;
     }>;
-    baseball_games<R>(args: QueryBaseball_GamesArgs, f: (req: Request<BbGamePaginator, {}>) => Request<BbGamePaginator, R>): RequestBuilder<Response & {
-        baseball_games: R;
+    baseball_games<R>(args: QueryBaseball_GamesArgs, f: (req: Request<BbGame, {}>) => Request<BbGame, R>): RequestBuilder<Response & {
+        baseball_games: PaginatorReturn<QueryBaseball_GamesArgs, BbGame, R>;
     }>;
-    baseball_teams<R>(args: QueryBaseball_TeamsArgs, f: (req: Request<BbTeamPaginator, {}>) => Request<BbTeamPaginator, R>): RequestBuilder<Response & {
-        baseball_teams: R;
+    baseball_teams<R>(args: QueryBaseball_TeamsArgs, f: (req: Request<BbTeam, {}>) => Request<BbTeam, R>): RequestBuilder<Response & {
+        baseball_teams: PaginatorReturn<QueryBaseball_TeamsArgs, BbTeam, R>;
     }>;
-    baseball_players<R>(args: QueryBaseball_PlayersArgs, f: (req: Request<BbPlayerPaginator, {}>) => Request<BbPlayerPaginator, R>): RequestBuilder<Response & {
-        baseball_players: R;
+    baseball_players<R>(args: QueryBaseball_PlayersArgs, f: (req: Request<BbPlayer, {}>) => Request<BbPlayer, R>): RequestBuilder<Response & {
+        baseball_players: PaginatorReturn<QueryBaseball_PlayersArgs, BbPlayer, R>;
     }>;
     send(): Promise<Response>;
 }

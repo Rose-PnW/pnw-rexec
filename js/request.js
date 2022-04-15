@@ -25,3 +25,14 @@ export class Request {
         }
     }
 }
+export function stringifyArgs(args) {
+    if (Array.isArray(args)) {
+        return `[${args.map((v) => `${stringifyArgs(v)}`).join(',')}]`;
+    }
+    else if (typeof args === 'object') {
+        return `{${Object.entries(args).map(([k, v]) => `${k}:${stringifyArgs(v)}`).join(' ')}}`;
+    }
+    else {
+        return String(args);
+    }
+}

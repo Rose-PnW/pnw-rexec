@@ -1,16 +1,6 @@
 import { config } from './executors.js';
-import { Request } from './request.js';
-function stringifyArgs(args) {
-    if (Array.isArray(args)) {
-        return `[${args.map((v) => `${stringifyArgs(v)}`).join(',')}]`;
-    }
-    else if (typeof args === 'object') {
-        return `{${Object.entries(args).map(([k, v]) => `${k}:${stringifyArgs(v)}`).join(' ')}}`;
-    }
-    else {
-        return String(args);
-    }
-}
+import { PaginatorRequest } from './paginator.js';
+import { Request, stringifyArgs } from './request.js';
 export class QueryRequest {
     constructor(endpoint, args, request) {
         this.endpoint = endpoint;
@@ -57,70 +47,77 @@ export class RequestBuilder {
     }
     nations(args, f) {
         const builder = this;
-        builder.requests.nations = new QueryRequest('nations', args, f(new Request()));
+        builder.requests.nations = new PaginatorRequest('nations', args, f(new Request()));
         return builder;
     }
     alliances(args, f) {
         const builder = this;
-        builder.requests.alliances = new QueryRequest('alliances', args, f(new Request()));
+        builder.requests.alliances = new PaginatorRequest('alliances', args, f(new Request()));
         return builder;
     }
     tradeprices(args, f) {
         const builder = this;
-        builder.requests.tradeprices = new QueryRequest('tradeprices', args, f(new Request()));
+        builder.requests.tradeprices = new PaginatorRequest('tradeprices', args, f(new Request()));
         return builder;
     }
     trades(args, f) {
         const builder = this;
-        builder.requests.trades = new QueryRequest('trades', args, f(new Request()));
+        builder.requests.trades = new PaginatorRequest('trades', args, f(new Request()));
         return builder;
     }
     wars(args, f) {
         const builder = this;
-        builder.requests.wars = new QueryRequest('wars', args, f(new Request()));
+        builder.requests.wars = new PaginatorRequest('wars', args, f(new Request()));
         return builder;
     }
     bounties(args, f) {
         const builder = this;
-        builder.requests.bounties = new QueryRequest('bounties', args, f(new Request()));
+        builder.requests.bounties = new PaginatorRequest('bounties', args, f(new Request()));
         return builder;
     }
     warattacks(args, f) {
         const builder = this;
-        builder.requests.warattacks = new QueryRequest('warattacks', args, f(new Request()));
+        builder.requests.warattacks = new PaginatorRequest('warattacks', args, f(new Request()));
         return builder;
     }
     treaties(args, f) {
         const builder = this;
-        builder.requests.treaties = new QueryRequest('treaties', args, f(new Request()));
+        builder.requests.treaties = new PaginatorRequest('treaties', args, f(new Request()));
         return builder;
     }
     cities(args, f) {
         const builder = this;
-        builder.requests.cities = new QueryRequest('cities', args, f(new Request()));
+        builder.requests.cities = new PaginatorRequest('cities', args, f(new Request()));
         return builder;
     }
     bankrecs(args, f) {
         const builder = this;
-        builder.requests.bankrecs = new QueryRequest('bankrecs', args, f(new Request()));
+        builder.requests.bankrecs = new PaginatorRequest('bankrecs', args, f(new Request()));
         return builder;
     }
     baseball_games(args, f) {
         const builder = this;
-        builder.requests.baseball_games = new QueryRequest('baseball_games', args, f(new Request()));
+        builder.requests.baseball_games = new PaginatorRequest('baseball_games', args, f(new Request()));
         return builder;
     }
     baseball_teams(args, f) {
         const builder = this;
-        builder.requests.baseball_teams = new QueryRequest('baseball_teams', args, f(new Request()));
+        builder.requests.baseball_teams = new PaginatorRequest('baseball_teams', args, f(new Request()));
         return builder;
     }
     baseball_players(args, f) {
         const builder = this;
-        builder.requests.baseball_players = new QueryRequest('baseball_players', args, f(new Request()));
+        builder.requests.baseball_players = new PaginatorRequest('baseball_players', args, f(new Request()));
         return builder;
     }
     async send() {
-        return await config.executor.push(this.requests);
+        const entries = Object.entries(this.requests);
+        return await config.executor.push(...entries);
     }
 }
+setTimeout(async () => {
+    const { nations } = await new RequestBuilder().nations({}, (n) => n.fields('nation_name')).send();
+    console.log('First page', JSON.stringify(nations));
+    await nations.fetchMore();
+    console.log('Second page', JSON.stringify(nations));
+}, 5000);
