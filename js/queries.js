@@ -113,4 +113,8 @@ export class RequestBuilder {
         const entries = Object.entries(this.requests);
         return await requesterConfig.executor.push(...entries);
     }
+    async sendSlow() {
+        const entries = Object.entries(this.requests);
+        return await requesterConfig.executor.pushSlow(...entries);
+    }
 }

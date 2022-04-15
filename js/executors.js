@@ -52,6 +52,9 @@ export class InstantExecutor {
             }
         }
     }
+    async pushSlow(...requests) {
+        return this.push(...requests);
+    }
 }
 class ExecutorBin {
     constructor(executor) {
@@ -86,14 +89,17 @@ export class BinExecutor {
     async run() {
         if (!this.running) {
             this.running = true;
-            await new Promise(resolve => setTimeout(resolve, this.interval));
             await Promise.all(this.bins.map(bin => bin.run()));
             this.bins = [];
             this.running = false;
         }
     }
     async push(...requests) {
+        const p = this.pushSlow(...requests);
         this.run();
+        return await p;
+    }
+    async pushSlow(...requests) {
         const res = await Promise.all(requests.map(([key, request]) => new Promise(res => {
             for (const bin of this.bins) {
                 if (!bin.has(key))

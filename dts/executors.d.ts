@@ -3,6 +3,7 @@ import { BaseRequest } from "./request.js";
 import { Query } from "./types.js";
 export interface Executor {
     push<R>(...requests: [keyof Query, BaseRequest<any, any>][]): Promise<R>;
+    pushSlow<R>(...requests: [keyof Query, BaseRequest<any, any>][]): Promise<R>;
 }
 interface ExecutorLog {
     date: Date;
@@ -11,6 +12,7 @@ interface ExecutorLog {
 }
 export declare class InstantExecutor implements Executor {
     push<R>(...requests: [keyof Query, BaseRequest<any, any>][]): Promise<R>;
+    pushSlow<R>(...requests: [keyof Query, BaseRequest<any, any>][]): Promise<R>;
 }
 export declare class BinExecutor implements Executor {
     private bins;
@@ -20,6 +22,7 @@ export declare class BinExecutor implements Executor {
     constructor(executor: Executor, interval: number);
     private run;
     push<R>(...requests: [keyof Query, BaseRequest<any, any>][]): Promise<R>;
+    pushSlow<R>(...requests: [keyof Query, BaseRequest<any, any>][]): Promise<R>;
 }
 declare class RequesterConfig {
     executor: Executor;

@@ -4,6 +4,7 @@ import { Query } from "./types.js";
 
 export interface Executor {
   push<R>(...requests: [keyof Query, BaseRequest<any, any>][]): Promise<R>;
+  pushSlow<R>(...requests: [keyof Query, BaseRequest<any, any>][]): Promise<R>;
 }
 
 function url() {
@@ -63,6 +64,9 @@ export class InstantExecutor implements Executor {
       }
     }
   }
+  async pushSlow<R>(...requests: [keyof Query, BaseRequest<any, any>][]): Promise<R> {
+    return this.push(...requests);
+  }
 }
 
 interface SleepingRequest {
@@ -105,14 +109,17 @@ export class BinExecutor implements Executor {
   private async run() {
     if(!this.running) {
       this.running = true;
-      await new Promise(resolve => setTimeout(resolve, this.interval));
       await Promise.all(this.bins.map(bin => bin.run()));
       this.bins = [];
       this.running = false;
     }
   }
   async push<R>(...requests: [keyof Query, BaseRequest<any, any>][]): Promise<R> {
+    const p = this.pushSlow(...requests) as Promise<R>;
     this.run();
+    return await p;
+  }
+  async pushSlow<R>(...requests: [keyof Query, BaseRequest<any, any>][]): Promise<R> {
     const res = await Promise.all(requests.map(([key, request]) => new Promise(res => {
       for(const bin of this.bins) {
         if(!bin.has(key)) return bin.push(key, request, res);

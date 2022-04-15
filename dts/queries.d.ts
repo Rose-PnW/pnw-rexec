@@ -63,4 +63,5 @@ export declare class RequestBuilder<Response = {}> {
         baseball_players: PaginatorReturn<QueryBaseball_PlayersArgs, BbPlayer, R>;
     }>;
     send(): Promise<Response>;
+    sendSlow(): Promise<Response>;
 }

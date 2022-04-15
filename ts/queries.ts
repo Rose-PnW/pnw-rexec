@@ -176,4 +176,8 @@ export class RequestBuilder<Response = {}> {
     const entries = Object.entries(this.requests) as [keyof Query, BaseRequest<any, any>][];
     return await requesterConfig.executor.push(...entries);
   }
+  async sendSlow(): Promise<Response> {
+    const entries = Object.entries(this.requests) as [keyof Query, BaseRequest<any, any>][];
+    return await requesterConfig.executor.pushSlow(...entries);
+  }
 }
