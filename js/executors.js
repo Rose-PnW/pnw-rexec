@@ -12,7 +12,7 @@ export class InstantExecutor {
     }
     url() {
         if (this.config._key) {
-            return `https://api.politicsandwar.com/graphql?api_key=${this.config.key}`;
+            return `https://api.politicsandwar.com/graphql?api_key=${this.config._key}`;
         }
         else {
             throw new Error("No API key provided");
