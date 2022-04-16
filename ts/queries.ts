@@ -186,6 +186,7 @@ export class RequestBuilder<O, Response = {}> {
   }
   async send(options?: O): Promise<Response> {
     const entries = Object.entries(this.requests) as [keyof Query, BaseRequest<any, any>][];
-    return await this.executor.push(entries, options);
+    const o = Object.assign({}, this.executor.defaultOptions, options);
+    return await this.executor.push(entries, o);
   }
 }

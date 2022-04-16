@@ -151,6 +151,7 @@ export class BinExecutor<O> implements Executor<O & BinExecutorOptions> {
 }
 
 export interface CacheExecutorOptions {
+  cache?: boolean;
   lifetime?: number;
 }
 
@@ -188,10 +189,14 @@ export class CacheExecutor<O> implements Executor<O & CacheExecutorOptions> {
     }
   }
   async push<R>(requests: [keyof Query, BaseRequest<any, any>][], options?: CacheExecutorOptions & O): Promise<R> {
-    const res = await Promise.all(requests.map(([key, request]) => 
-      this.tryCache(key, request, (r) => this.executor.push([r], options), options ?? this.defaultOptions)
-    ));
-    return Object.fromEntries(res) as R;
+    if(options?.cache) {
+      const res = await Promise.all(requests.map(([key, request]) => 
+        this.tryCache(key, request, (r) => this.executor.push([r], options), options ?? this.defaultOptions)
+      ));
+      return Object.fromEntries(res) as R;
+    } else {
+      return this.executor.push(requests, options);
+    }
   }
 }
 

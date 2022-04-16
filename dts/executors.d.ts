@@ -38,6 +38,7 @@ export declare class BinExecutor<O> implements Executor<O & BinExecutorOptions> 
     push<R>(requests: [keyof Query, BaseRequest<any, any>][], options?: O & BinExecutorOptions): Promise<R>;
 }
 export interface CacheExecutorOptions {
+    cache?: boolean;
     lifetime?: number;
 }
 export declare class CacheExecutor<O> implements Executor<O & CacheExecutorOptions> {

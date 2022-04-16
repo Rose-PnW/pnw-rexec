@@ -141,8 +141,13 @@ export class CacheExecutor {
         }
     }
     async push(requests, options) {
-        const res = await Promise.all(requests.map(([key, request]) => this.tryCache(key, request, (r) => this.executor.push([r], options), options ?? this.defaultOptions)));
-        return Object.fromEntries(res);
+        if (options?.cache) {
+            const res = await Promise.all(requests.map(([key, request]) => this.tryCache(key, request, (r) => this.executor.push([r], options), options ?? this.defaultOptions)));
+            return Object.fromEntries(res);
+        }
+        else {
+            return this.executor.push(requests, options);
+        }
     }
 }
 export class RequesterProfile {

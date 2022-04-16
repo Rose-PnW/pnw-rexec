@@ -120,6 +120,7 @@ export class RequestBuilder {
     }
     async send(options) {
         const entries = Object.entries(this.requests);
-        return await this.executor.push(entries, options);
+        const o = Object.assign({}, this.executor.defaultOptions, options);
+        return await this.executor.push(entries, o);
     }
 }
