@@ -1,18 +1,12 @@
 import fetch, { Response } from "node-fetch";
+import { RequestBuilder } from "./queries.js";
 import { BaseRequest } from "./request.js";
-import { Query, TradeType } from "./types.js";
+import { Query } from "./types.js";
 
-export interface Executor {
-  push<R>(...requests: [keyof Query, BaseRequest<any, any>][]): Promise<R>;
-  pushSlow<R>(...requests: [keyof Query, BaseRequest<any, any>][]): Promise<R>;
-}
-
-function url() {
-  if(requesterConfig.key) {
-    return `https://api.politicsandwar.com/graphql?api_key=${requesterConfig.key}`;
-  } else {
-    throw new Error("No API key provided");
-  }
+export interface Executor<O> {
+  config: RequesterProfile<O>;
+  defaultOptions: O;
+  push<R>(requests: [keyof Query, BaseRequest<any, any>][], options?: O | undefined): Promise<R>;
 }
 
 class QueryError extends Error {
@@ -21,18 +15,30 @@ class QueryError extends Error {
 	}
 }
 
-interface ExecutorLog {
+export interface ExecutorLog {
   date: Date;
   query: string;
   response: Response;
 }
 
-export class InstantExecutor implements Executor {
-  async push<R>(...requests: [keyof Query, BaseRequest<any, any>][]): Promise<R> {
+export class InstantExecutor implements Executor<{}> {
+  config: RequesterProfile<{}>;
+  defaultOptions = {};
+  constructor(config: RequesterProfile<{}>) {
+    this.config = config;
+  }
+  private url() {
+    if(this.config._key) {
+      return `https://api.politicsandwar.com/graphql?api_key=${this.config.key}`;
+    } else {
+      throw new Error("No API key provided");
+    }
+  }
+  async push<R>(requests: [keyof Query, BaseRequest<any, any>][]): Promise<R> {
     while(true) {
       const queries: string[] = requests.map(([_, req]) => req.stringify());
       const query = `{${queries.join('')}}`;
-      const response = await fetch(url(), {
+      const response = await fetch(this.url(), {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -44,7 +50,7 @@ export class InstantExecutor implements Executor {
         query,
         response
       };
-      requesterConfig.log?.(log);
+      this.config._log?.(log);
       if(response.ok) {
         const query = await response.json() as { data: Query, errors: any[] };
         if(query.errors?.length > 0) {
@@ -64,20 +70,17 @@ export class InstantExecutor implements Executor {
       }
     }
   }
-  async pushSlow<R>(...requests: [keyof Query, BaseRequest<any, any>][]): Promise<R> {
-    return this.push(...requests);
-  }
 }
 
-interface SleepingRequest {
+export interface SleepingRequest {
   request: BaseRequest<any, any>,
   resolve: (result: any) => void,
 }
 
-class ExecutorBin {
+class ExecutorBin<O> {
   private requests: {[K in keyof Query]: SleepingRequest} = {};
-  private executor: Executor;
-  constructor(executor: Executor) {
+  private executor: Executor<O>;
+  constructor(executor: Executor<O>) {
     this.executor = executor;
   }
   has(key: keyof Query): boolean {
@@ -91,7 +94,7 @@ class ExecutorBin {
   }
   async run() {
     const requests = Object.entries(this.requests).map(([k, req]) => [k, req.request]) as [keyof Query, BaseRequest<any, any>][];
-    const result = await this.executor.push(...requests) as Query;
+    const result = await this.executor.push(requests) as Query;
     Object.entries(this.requests).forEach(([s, req]) => {
       const k = s as keyof Query;
       req.resolve([k, result[k]]);
@@ -99,51 +102,77 @@ class ExecutorBin {
   }
 }
 
-export class BinExecutor implements Executor {
-  private bins: ExecutorBin[] = [];
-  private executor: Executor;
-  private interval: number;
-  constructor(executor: Executor, interval: number) {
+export interface BinExecutorOptions {
+  defer?: boolean;
+  timeout?: number;
+}
+
+export class BinExecutor<O> implements Executor<O & BinExecutorOptions> {
+  config: RequesterProfile<O & BinExecutorOptions>;
+  defaultOptions: O & BinExecutorOptions;
+  private bins: ExecutorBin<O>[] = [];
+  private executor: Executor<O>;
+  constructor(
+    config: RequesterProfile<O & BinExecutorOptions>,
+    executor: Executor<O>,
+    options: O & BinExecutorOptions
+  ) {
+    this.config = config;
     this.executor = executor;
-    this.interval = interval;
+    this.defaultOptions = options;
   }
   private async run() {
     const bins = this.bins;
     this.bins = [];
     await Promise.all(bins.map(bin => bin.run()));
   }
-  async push<R>(...requests: [keyof Query, BaseRequest<any, any>][]): Promise<R> {
-    const p = this.pushSlow(...requests) as Promise<R>;
-    this.run();
-    return await p;
+  private async tryDefer(promise: Promise<any>, options: BinExecutorOptions) {
+    if(options.defer) {
+      const timeout = setTimeout(() => this.run(), options.timeout);
+      const result = await promise;
+      clearTimeout(timeout);
+      return result;
+    } else {
+      this.run();
+      return await promise;
+    }
   }
-  async pushSlow<R>(...requests: [keyof Query, BaseRequest<any, any>][]): Promise<R> {
-    const timeout = setTimeout(() => this.run(), this.interval);
-    const res = await Promise.all(requests.map(([key, request]) => new Promise(res => {
+  async push<R>(requests: [keyof Query, BaseRequest<any, any>][], options?: O & BinExecutorOptions): Promise<R> {
+    const res = await this.tryDefer(Promise.all(requests.map(([key, request]) => new Promise(res => {
       for(const bin of this.bins) {
         if(!bin.has(key)) return bin.push(key, request, res);
       }
       const bin = new ExecutorBin(this.executor);
       bin.push(key, request, res);
       this.bins.push(bin);
-    }))) as [keyof Query, any][];
-    clearTimeout(timeout);
+    }))) as Promise<[keyof Query, any][]>, options ?? this.defaultOptions);
     return Object.fromEntries(res) as R;
   }
 }
 
-export class CacheExecutor implements Executor {
-  private executor: Executor;
+export interface CacheExecutorOptions {
+  lifetime?: number;
+}
+
+export class CacheExecutor<O> implements Executor<O & CacheExecutorOptions> {
+  config: RequesterProfile<O & CacheExecutorOptions>;
+  defaultOptions: O & CacheExecutorOptions;
+  private executor: Executor<O>;
   private cache: {[K in keyof Query]: {[k: number]: any}} = {};
-  private lifetime: number;
-  constructor(executor: Executor, lifetime: number) {
+  constructor(
+    config: RequesterProfile<O & CacheExecutorOptions>,
+    executor: Executor<O>,
+    options: O & CacheExecutorOptions
+  ) {
+    this.config = config;
     this.executor = executor;
-    this.lifetime = lifetime;
+    this.defaultOptions = options;
   }
   private async tryCache(
     key: keyof Query,
     request: BaseRequest<any, any>,
-    get: (request: [keyof Query, BaseRequest<any, any>]) => Promise<Query>
+    get: (request: [keyof Query, BaseRequest<any, any>]) => Promise<Query>,
+    options: O & CacheExecutorOptions
   ): Promise<any> {
     const hash = request.hash();
     const w = <T, R>(v: T, f: (v: NonNullable<T>) => R): R | undefined => v ? f(v as NonNullable<T>) : undefined;
@@ -154,33 +183,50 @@ export class CacheExecutor implements Executor {
     } else {
       const result = await get([key, request]);
       w(this.cache[key], (c) => c[hash] = result[key]);
-      setTimeout(() => delete this.cache[key]?.[hash], this.lifetime);
+      setTimeout(() => delete this.cache[key]?.[hash], options?.lifetime ?? 60_000);
       return [key, result[key]];
     }
   }
-  async push<R>(...requests: [keyof Query, BaseRequest<any, any>][]): Promise<R> {
-    const res = await Promise.all(requests.map(([key, request]) => this.tryCache(key, request, (r) => this.executor.push(r))));
-    return Object.fromEntries(res) as R;
-  }
-  async pushSlow<R>(...requests: [keyof Query, BaseRequest<any, any>][]): Promise<R> {
-    const res = await Promise.all(requests.map(([key, request]) => this.tryCache(key, request, (r) => this.executor.pushSlow(r))));
+  async push<R>(requests: [keyof Query, BaseRequest<any, any>][], options?: CacheExecutorOptions & O): Promise<R> {
+    const res = await Promise.all(requests.map(([key, request]) => 
+      this.tryCache(key, request, (r) => this.executor.push([r], options), options ?? this.defaultOptions)
+    ));
     return Object.fromEntries(res) as R;
   }
 }
 
-class RequesterConfig {
-  executor: Executor = new InstantExecutor();
-  key?: string;
-  log?: (log: ExecutorLog) => void;
-  withExecutor(executor: Executor) {
-    this.executor = executor;
+type Constructor<O, N> = new (
+  config: RequesterProfile<O & N>,
+  executor: Executor<O>,
+  options: O & N
+) => Executor<O & N>;
+export class RequesterProfile<O = {}> {
+  _defaultOptions: O = {} as O;
+  _executor: Executor<O> = new InstantExecutor(this) as any as Executor<O>;
+  _key?: string;
+  _log?: (log: ExecutorLog) => void;
+  executor<N, E extends Constructor<O, N>>(e: E, options: N): RequesterProfile<O & N> {
+    const p = this as any as RequesterProfile<O & N>;
+    const newOptions = Object.assign({}, this._defaultOptions, options);
+    const executor = new e(p, this._executor, newOptions);
+    p._executor = executor;
+    return p;
   }
-  withKey(key: string) {
-    this.key = key;
+  cache(options?: CacheExecutorOptions): RequesterProfile<O & CacheExecutorOptions> {
+    return this.executor(CacheExecutor, options);
   }
-  withLog(log: (log: ExecutorLog) => void) {
-    this.log = log;
+  bin(options?: BinExecutorOptions): RequesterProfile<O & BinExecutorOptions> {
+    return this.executor(BinExecutor, options);
+  }
+  key(key: string) {
+    this._key = key;
+    return this;
+  }
+  log(log: (log: ExecutorLog) => void) {
+    this._log = log;
+    return this;
+  }
+  request() {
+    return new RequestBuilder(this._executor);
   }
 }
-
-export const requesterConfig = new RequesterConfig();

@@ -1,4 +1,4 @@
-import { requesterConfig, InstantExecutor, BinExecutor, CacheExecutor } from "./executors.js";
-import * as types from './types.js';
+import { RequesterProfile, InstantExecutor, BinExecutor, CacheExecutor } from "./executors.js";
 import { RequestBuilder } from "./queries.js";
-export { requesterConfig, types, InstantExecutor, BinExecutor, CacheExecutor, RequestBuilder };
+import * as types from './types.js';
+export { RequesterProfile, InstantExecutor, BinExecutor, CacheExecutor, RequestBuilder, types };

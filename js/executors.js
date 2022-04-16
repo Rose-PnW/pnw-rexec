@@ -1,23 +1,28 @@
 import fetch from "node-fetch";
-function url() {
-    if (requesterConfig.key) {
-        return `https://api.politicsandwar.com/graphql?api_key=${requesterConfig.key}`;
-    }
-    else {
-        throw new Error("No API key provided");
-    }
-}
+import { RequestBuilder } from "./queries.js";
 class QueryError extends Error {
     constructor(response, query) {
         super(`GraphQL Query Error: ${response.status} ${response.statusText} ${query}`);
     }
 }
 export class InstantExecutor {
-    async push(...requests) {
+    constructor(config) {
+        this.defaultOptions = {};
+        this.config = config;
+    }
+    url() {
+        if (this.config._key) {
+            return `https://api.politicsandwar.com/graphql?api_key=${this.config.key}`;
+        }
+        else {
+            throw new Error("No API key provided");
+        }
+    }
+    async push(requests) {
         while (true) {
             const queries = requests.map(([_, req]) => req.stringify());
             const query = `{${queries.join('')}}`;
-            const response = await fetch(url(), {
+            const response = await fetch(this.url(), {
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -29,7 +34,7 @@ export class InstantExecutor {
                 query,
                 response
             };
-            requesterConfig.log?.(log);
+            this.config._log?.(log);
             if (response.ok) {
                 const query = await response.json();
                 if (query.errors?.length > 0) {
@@ -52,9 +57,6 @@ export class InstantExecutor {
             }
         }
     }
-    async pushSlow(...requests) {
-        return this.push(...requests);
-    }
 }
 class ExecutorBin {
     constructor(executor) {
@@ -72,7 +74,7 @@ class ExecutorBin {
     }
     async run() {
         const requests = Object.entries(this.requests).map(([k, req]) => [k, req.request]);
-        const result = await this.executor.push(...requests);
+        const result = await this.executor.push(requests);
         Object.entries(this.requests).forEach(([s, req]) => {
             const k = s;
             req.resolve([k, result[k]]);
@@ -80,24 +82,31 @@ class ExecutorBin {
     }
 }
 export class BinExecutor {
-    constructor(executor, interval) {
+    constructor(config, executor, options) {
         this.bins = [];
+        this.config = config;
         this.executor = executor;
-        this.interval = interval;
+        this.defaultOptions = options;
     }
     async run() {
         const bins = this.bins;
         this.bins = [];
         await Promise.all(bins.map(bin => bin.run()));
     }
-    async push(...requests) {
-        const p = this.pushSlow(...requests);
-        this.run();
-        return await p;
+    async tryDefer(promise, options) {
+        if (options.defer) {
+            const timeout = setTimeout(() => this.run(), options.timeout);
+            const result = await promise;
+            clearTimeout(timeout);
+            return result;
+        }
+        else {
+            this.run();
+            return await promise;
+        }
     }
-    async pushSlow(...requests) {
-        const timeout = setTimeout(() => this.run(), this.interval);
-        const res = await Promise.all(requests.map(([key, request]) => new Promise(res => {
+    async push(requests, options) {
+        const res = await this.tryDefer(Promise.all(requests.map(([key, request]) => new Promise(res => {
             for (const bin of this.bins) {
                 if (!bin.has(key))
                     return bin.push(key, request, res);
@@ -105,18 +114,18 @@ export class BinExecutor {
             const bin = new ExecutorBin(this.executor);
             bin.push(key, request, res);
             this.bins.push(bin);
-        })));
-        clearTimeout(timeout);
+        }))), options ?? this.defaultOptions);
         return Object.fromEntries(res);
     }
 }
 export class CacheExecutor {
-    constructor(executor, lifetime) {
+    constructor(config, executor, options) {
         this.cache = {};
+        this.config = config;
         this.executor = executor;
-        this.lifetime = lifetime;
+        this.defaultOptions = options;
     }
-    async tryCache(key, request, get) {
+    async tryCache(key, request, get, options) {
         const hash = request.hash();
         const w = (v, f) => v ? f(v) : undefined;
         this.cache[key] ??= {};
@@ -127,31 +136,42 @@ export class CacheExecutor {
         else {
             const result = await get([key, request]);
             w(this.cache[key], (c) => c[hash] = result[key]);
-            setTimeout(() => delete this.cache[key]?.[hash], this.lifetime);
+            setTimeout(() => delete this.cache[key]?.[hash], options?.lifetime ?? 60000);
             return [key, result[key]];
         }
     }
-    async push(...requests) {
-        const res = await Promise.all(requests.map(([key, request]) => this.tryCache(key, request, (r) => this.executor.push(r))));
-        return Object.fromEntries(res);
-    }
-    async pushSlow(...requests) {
-        const res = await Promise.all(requests.map(([key, request]) => this.tryCache(key, request, (r) => this.executor.pushSlow(r))));
+    async push(requests, options) {
+        const res = await Promise.all(requests.map(([key, request]) => this.tryCache(key, request, (r) => this.executor.push([r], options), options ?? this.defaultOptions)));
         return Object.fromEntries(res);
     }
 }
-class RequesterConfig {
+export class RequesterProfile {
     constructor() {
-        this.executor = new InstantExecutor();
+        this._defaultOptions = {};
+        this._executor = new InstantExecutor(this);
     }
-    withExecutor(executor) {
-        this.executor = executor;
+    executor(e, options) {
+        const p = this;
+        const newOptions = Object.assign({}, this._defaultOptions, options);
+        const executor = new e(p, this._executor, newOptions);
+        p._executor = executor;
+        return p;
     }
-    withKey(key) {
-        this.key = key;
+    cache(options) {
+        return this.executor(CacheExecutor, options);
     }
-    withLog(log) {
-        this.log = log;
+    bin(options) {
+        return this.executor(BinExecutor, options);
+    }
+    key(key) {
+        this._key = key;
+        return this;
+    }
+    log(log) {
+        this._log = log;
+        return this;
+    }
+    request() {
+        return new RequestBuilder(this._executor);
     }
 }
-export const requesterConfig = new RequesterConfig();
