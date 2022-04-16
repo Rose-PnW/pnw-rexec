@@ -71,7 +71,7 @@ export class PaginatorReturn<A extends {page?:number|null}, T, R, O> extends Arr
   async fetchMore(options?: O): Promise<ParsedPaginatorInfo<R>> {
     if(this.info?.hasMorePages) {
       this.info.currentPage += 1;
-      const q = this.query as any as QueryRequest<A & {page:number}, PaginatorType<T>, PaginatorType<R>>;
+      const q = this.query as QueryRequest<A & {page:number}, PaginatorType<T>, PaginatorType<R>>;
       q.args.page = this.info.currentPage;
       const req = [q.endpoint, q] as [keyof Query, QueryRequest<any, any, any>];
       const res = await this.executor?.push([req], options) as {[K in string]: any};
