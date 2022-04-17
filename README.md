@@ -163,7 +163,7 @@ async push<R>(
 ```
 To use your executor, you attach it to a profile like so
 ```ts
-const profile = new  RequesterProfile().executor(MyExecutor, {});
+const profile = new RequesterProfile().executor(MyExecutor, {});
 ```
 And that's it
 ### Credits
