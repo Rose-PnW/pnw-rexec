@@ -131,8 +131,10 @@ class MyExecutor<O> implements Executor<MyOptions & O> {
 }
 ```
 >`config` is the profile that created your executor
-`executor` is the next executor down the line
-`defaultOptions` is an object that merges executor previous
+>
+>`executor` is the next executor down the line
+>
+>`defaultOptions` is an object that merges executor previous
 
 Now we need a constructor
 ```ts
@@ -166,4 +168,5 @@ const profile = new  RequesterProfile().executor(MyExecutor, {});
 And that's it
 ### Credits
 This package was created by the tech team at [Rose](https://politicsandwar.com/alliance/id=790).
+
 The basic types were generated with help from [GraphQL Code Generator](https://www.graphql-code-generator.com/).
