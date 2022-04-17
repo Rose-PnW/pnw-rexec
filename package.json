@@ -1,12 +1,18 @@
 {
   "name": "pnw-rexec",
   "type": "module",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Request builder and executor for the Politics and War API.",
   "dependencies": {
     "node-fetch": "^3.2.3",
     "typescript": "^4.6.3"
   },
   "types": "./dts/index.d.ts",
-  "main": "./js/index.js"
+  "main": "./js/index.js",
+  "keywords": [
+    "politics and war",
+    "pnw",
+    "graphql",
+    "api"
+  ]
 }
