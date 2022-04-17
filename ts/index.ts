@@ -6,13 +6,15 @@ import {
   CacheExecutor, CacheExecutorOptions
 } from "./executors.js";
 import { RequestBuilder } from "./queries.js";
-import * as types from './types.js';
+import { BaseRequest } from "./request.js";
+import * as Types from './types.js';
 export {
+  BaseRequest,
   RequesterProfile,
   Executor,
   InstantExecutor,
   BinExecutor, BinExecutorOptions,
   CacheExecutor, CacheExecutorOptions,
   RequestBuilder,
-  types
-}
+  Types
+};
