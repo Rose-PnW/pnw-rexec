@@ -7,6 +7,7 @@ import {
 } from "./executors.js";
 import { RequestBuilder } from "./queries.js";
 import { BaseRequest } from "./request.js";
+import { ProjectBits } from "./parsed.js";
 import * as Types from './types.js';
 export {
   BaseRequest,
@@ -16,5 +17,6 @@ export {
   BinExecutor, BinExecutorOptions,
   CacheExecutor, CacheExecutorOptions,
   RequestBuilder,
+  ProjectBits,
   Types
 };

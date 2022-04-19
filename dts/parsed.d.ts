@@ -1,0 +1,34 @@
+export declare class ProjectBits {
+    bits: number;
+    constructor(bits: number);
+    ironw: () => number;
+    bauxitew: () => number;
+    armss: () => number;
+    egr: () => number;
+    massirr: () => number;
+    itc: () => number;
+    mlp: () => number;
+    nrf: () => number;
+    irond: () => number;
+    vds: () => number;
+    cia: () => number;
+    cfce: () => number;
+    propb: () => number;
+    uap: () => number;
+    city_planning: () => number;
+    adv_city_planning: () => number;
+    space_program: () => number;
+    spy_satellite: () => number;
+    moon_landing: () => number;
+    pirate_economy: () => number;
+    recycling_initiative: () => number;
+    telecom_satellite: () => number;
+    green_tech: () => number;
+    arable_land_agency: () => number;
+    clinical_research_center: () => number;
+    specialized_police_training: () => number;
+    adv_engineering_corps: () => number;
+    gsa_np: () => number;
+    rnd_np: () => number;
+    rpc_np: () => number;
+}
