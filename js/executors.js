@@ -157,7 +157,7 @@ export class RequesterProfile {
     }
     executor(e, options) {
         const p = this;
-        const newOptions = Object.assign({}, this._defaultOptions, options);
+        const newOptions = Object.assign(this._defaultOptions, options);
         const executor = new e(p, this._executor, newOptions);
         p._executor = executor;
         return p;

@@ -212,7 +212,7 @@ export class RequesterProfile<O = {}> {
   _log?: (log: ExecutorLog) => void;
   executor<N, E extends Constructor<O, N>>(e: E, options: N): RequesterProfile<O & N> {
     const p = this as any as RequesterProfile<O & N>;
-    const newOptions = Object.assign({}, this._defaultOptions, options);
+    const newOptions = Object.assign(this._defaultOptions, options);
     const executor = new e(p, this._executor, newOptions);
     p._executor = executor;
     return p;
