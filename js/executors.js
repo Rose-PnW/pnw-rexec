@@ -66,19 +66,23 @@ class ExecutorBin {
     has(key) {
         return this.requests[key] !== undefined;
     }
-    push(key, request, resolve) {
+    push(key, request, resolve, reject) {
         this.requests[key] = {
             request,
-            resolve
+            resolve,
+            reject
         };
     }
     async run() {
-        const requests = Object.entries(this.requests).map(([k, req]) => [k, req.request]);
-        const result = await this.executor.push(requests);
-        Object.entries(this.requests).forEach(([s, req]) => {
-            const k = s;
-            req.resolve([k, result[k]]);
-        });
+        const entries = Object.entries(this.requests);
+        const requests = entries.map(([k, req]) => [k, req.request]);
+        try {
+            const result = await this.executor.push(requests);
+            entries.forEach(([k, req]) => req.resolve([k, result[k]]));
+        }
+        catch (err) {
+            entries.forEach(([_, req]) => req.reject(err));
+        }
     }
 }
 export class BinExecutor {
@@ -106,13 +110,13 @@ export class BinExecutor {
         }
     }
     async push(requests, options) {
-        const res = await this.tryDefer(Promise.all(requests.map(([key, request]) => new Promise(res => {
+        const res = await this.tryDefer(Promise.all(requests.map(([key, request]) => new Promise((res, rej) => {
             for (const bin of this.bins) {
                 if (!bin.has(key))
-                    return bin.push(key, request, res);
+                    return bin.push(key, request, res, rej);
             }
             const bin = new ExecutorBin(this.executor);
-            bin.push(key, request, res);
+            bin.push(key, request, res, rej);
             this.bins.push(bin);
         }))), options ?? this.defaultOptions);
         return Object.fromEntries(res);

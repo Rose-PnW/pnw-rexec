@@ -22,6 +22,7 @@ export declare class InstantExecutor implements Executor<{}> {
 export interface SleepingRequest {
     request: BaseRequest<any, any>;
     resolve: (result: any) => void;
+    reject: (error: any) => void;
 }
 export interface BinExecutorOptions {
     defer?: boolean;

@@ -75,6 +75,7 @@ export class InstantExecutor implements Executor<{}> {
 export interface SleepingRequest {
   request: BaseRequest<any, any>,
   resolve: (result: any) => void,
+  reject: (error: any) => void,
 }
 
 class ExecutorBin<O> {
@@ -86,19 +87,22 @@ class ExecutorBin<O> {
   has(key: keyof Query): boolean {
     return this.requests[key] !== undefined;
   }
-  push(key: keyof Query, request: BaseRequest<any, any>, resolve: (result: any) => void) {
+  push(key: keyof Query, request: BaseRequest<any, any>, resolve: (result: any) => void, reject: (error: any) => void) {
     this.requests[key] = {
       request,
-      resolve
+      resolve,
+      reject
     };
   }
   async run() {
-    const requests = Object.entries(this.requests).map(([k, req]) => [k, req.request]) as [keyof Query, BaseRequest<any, any>][];
-    const result = await this.executor.push(requests) as Query;
-    Object.entries(this.requests).forEach(([s, req]) => {
-      const k = s as keyof Query;
-      req.resolve([k, result[k]]);
-    });
+    const entries = Object.entries(this.requests) as [[keyof Query, SleepingRequest]];
+    const requests = entries.map(([k, req]) => [k, req.request]) as [keyof Query, BaseRequest<any, any>][];
+    try {
+      const result = await this.executor.push(requests) as Query;
+      entries.forEach(([k, req]) => req.resolve([k, result[k]]));
+    } catch(err) {
+      entries.forEach(([_, req]) => req.reject(err));
+    }
   }
 }
 
@@ -138,12 +142,12 @@ export class BinExecutor<O> implements Executor<O & BinExecutorOptions> {
     }
   }
   async push<R>(requests: [keyof Query, BaseRequest<any, any>][], options?: O & BinExecutorOptions): Promise<R> {
-    const res = await this.tryDefer(Promise.all(requests.map(([key, request]) => new Promise(res => {
+    const res = await this.tryDefer(Promise.all(requests.map(([key, request]) => new Promise((res, rej) => {
       for(const bin of this.bins) {
-        if(!bin.has(key)) return bin.push(key, request, res);
+        if(!bin.has(key)) return bin.push(key, request, res, rej);
       }
       const bin = new ExecutorBin(this.executor);
-      bin.push(key, request, res);
+      bin.push(key, request, res, rej);
       this.bins.push(bin);
     }))) as Promise<[keyof Query, any][]>, options ?? this.defaultOptions);
     return Object.fromEntries(res) as R;
@@ -231,7 +235,7 @@ export class RequesterProfile<O = {}> {
     this._log = log;
     return this;
   }
-  request() {
+  request(): RequestBuilder<O, {}> {
     return new RequestBuilder(this._executor);
   }
 }
