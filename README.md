@@ -94,7 +94,7 @@ await tradeprices.fetchMore();
 ```
 The return type of these functions is a parsed version of paginator info
 ```js
-const  p = await tradeprices.fetchMore();
+const p = await tradeprices.fetchMore();
 console.log('The first price of food was', p.lastItem?.food);
 ```
 That is also available in the first page
