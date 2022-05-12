@@ -60,6 +60,8 @@ export function stringifyArgs<A>(args: A): string {
       .sort(([a],[b])=> a > b ? -1 : a===b ? 0 : 1)
       .map(([k, v]) =>  `${k}:${stringifyArgs(v)}`).join(' ')
     }}`;
+  } else if(typeof args === 'number') {
+    return args.toString();
   } else {
     return `"${args}"`;
   }
