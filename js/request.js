@@ -32,6 +32,14 @@ export class Request {
         return hash;
     }
 }
+function stringifyObjArgs(args) {
+    if (typeof args === 'string') {
+        return args;
+    }
+    else {
+        return stringifyArgs(args);
+    }
+}
 export function stringifyArgs(args) {
     if (Array.isArray(args)) {
         return `[${args
@@ -43,12 +51,12 @@ export function stringifyArgs(args) {
         return `{${Object
             .entries(args)
             .sort(([a], [b]) => a > b ? -1 : a === b ? 0 : 1)
-            .map(([k, v]) => `${k}:${stringifyArgs(v)}`).join(' ')}}`;
+            .map(([k, v]) => `${k}:${stringifyObjArgs(v)}`).join(' ')}}`;
     }
-    else if (typeof args === 'number') {
-        return args.toString();
+    else if (typeof args === 'string') {
+        return `"${args}"`;
     }
     else {
-        return `"${args}"`;
+        return String(args);
     }
 }

@@ -47,6 +47,14 @@ implements
   }
 }
 
+function stringifyObjArgs<A>(args: A): string {
+  if(typeof args === 'string') {
+    return args;
+  } else {
+    return stringifyArgs(args);
+  }
+}
+
 export function stringifyArgs<A>(args: A): string {
   if(Array.isArray(args)) {
     return `[${args
@@ -58,11 +66,11 @@ export function stringifyArgs<A>(args: A): string {
     return `{${Object
       .entries(args)
       .sort(([a],[b])=> a > b ? -1 : a===b ? 0 : 1)
-      .map(([k, v]) =>  `${k}:${stringifyArgs(v)}`).join(' ')
+      .map(([k, v]) =>  `${k}:${stringifyObjArgs(v)}`).join(' ')
     }}`;
-  } else if(typeof args === 'number') {
-    return args.toString();
-  } else {
+  } else if(typeof args === 'string') {
     return `"${args}"`;
+  } else {
+    return String(args);
   }
 }

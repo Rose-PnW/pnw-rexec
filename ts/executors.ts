@@ -43,7 +43,7 @@ export class InstantExecutor implements Executor<{}> {
           'Content-Type': 'application/json',
         },
         method: 'POST',
-        body: `{"query":"${query}"}`
+        body: `{"query":"${query.replaceAll('"', '\\"')}"}`,
       });
       const log = {
         date: new Date(),
