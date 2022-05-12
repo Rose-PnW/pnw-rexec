@@ -61,6 +61,6 @@ export function stringifyArgs<A>(args: A): string {
       .map(([k, v]) =>  `${k}:${stringifyArgs(v)}`).join(' ')
     }}`;
   } else {
-    return String(args);
+    return `"${args}"`;
   }
 }
