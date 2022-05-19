@@ -35,6 +35,8 @@ export type Query = {
   baseball_games?: Maybe<BbGamePaginator>;
   baseball_teams?: Maybe<BbTeamPaginator>;
   baseball_players?: Maybe<BbPlayerPaginator>;
+  treasure_trades?: Maybe<TreasureTradePaginator>;
+  embargoes?: Maybe<EmbargoPaginator>;
 };
 
 
@@ -81,7 +83,7 @@ export type QueryTradesArgs = {
   max_id?: InputMaybe<Scalars['Int']>;
   type?: InputMaybe<TradeType>;
   nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
-  offer_resource?: InputMaybe<Scalars['String']>;
+  offer_resource?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   buy_or_sell?: InputMaybe<Scalars['String']>;
   accepted?: InputMaybe<Scalars['Boolean']>;
   orderBy?: InputMaybe<Array<QueryTradesOrderByOrderByClause>>;
@@ -160,10 +162,12 @@ export type QueryBankrecsArgs = {
 
 
 export type QueryBaseball_GamesArgs = {
+  id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
   min_id?: InputMaybe<Scalars['Int']>;
   max_id?: InputMaybe<Scalars['Int']>;
   team_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
   orderBy?: InputMaybe<Array<QueryBaseballGamesOrderByOrderByClause>>;
+  open?: InputMaybe<Scalars['Boolean']>;
   first?: InputMaybe<Scalars['Int']>;
   page?: InputMaybe<Scalars['Int']>;
 };
@@ -185,9 +189,34 @@ export type QueryBaseball_PlayersArgs = {
   page?: InputMaybe<Scalars['Int']>;
 };
 
+
+export type QueryTreasure_TradesArgs = {
+  id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  min_id?: InputMaybe<Scalars['Int']>;
+  max_id?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<QueryTreasureTradesOrderByOrderByClause>>;
+  first?: InputMaybe<Scalars['Int']>;
+  page?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryEmbargoesArgs = {
+  id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  min_id?: InputMaybe<Scalars['Int']>;
+  max_id?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<QueryEmbargoesOrderByOrderByClause>>;
+  first?: InputMaybe<Scalars['Int']>;
+  page?: InputMaybe<Scalars['Int']>;
+};
+
 export type ApiKeyDetails = {
   __typename?: 'ApiKeyDetails';
   nation?: Maybe<Nation>;
+  key?: Maybe<Scalars['String']>;
+  requests?: Maybe<Scalars['Int']>;
+  max_requests?: Maybe<Scalars['Int']>;
 };
 
 export type Nation = {
@@ -334,7 +363,7 @@ export type Nation = {
   wars_lost?: Maybe<Scalars['Int']>;
   tax_id?: Maybe<Scalars['ID']>;
   alliance_seniority?: Maybe<Scalars['Int']>;
-  baseball_teams?: Maybe<BbTeam>;
+  baseball_team?: Maybe<BbTeam>;
   gross_national_income?: Maybe<Scalars['Float']>;
   gross_domestic_product?: Maybe<Scalars['Float']>;
   soldier_casualties?: Maybe<Scalars['Int']>;
@@ -522,7 +551,8 @@ export enum AllianceNationsOrderByColumn {
   Aircraft = 'AIRCRAFT',
   Ships = 'SHIPS',
   Missiles = 'MISSILES',
-  Nukes = 'NUKES'
+  Nukes = 'NUKES',
+  Cities = 'CITIES'
 }
 
 export enum SortOrder {
@@ -575,12 +605,16 @@ export type Bankrec = {
   /** @deprecated Use sender_type instead. */
   stype?: Maybe<Scalars['Int']>;
   sender_type?: Maybe<Scalars['Int']>;
-  /** @deprecated Use recipient_id instead. */
+  /** @deprecated Use receiver_id instead. */
   rid?: Maybe<Scalars['ID']>;
+  /** @deprecated Use receiver_id instead. */
   recipient_id?: Maybe<Scalars['ID']>;
-  /** @deprecated Use recipient_type instead. */
+  receiver_id?: Maybe<Scalars['ID']>;
+  /** @deprecated Use receiver_type instead. */
   rtype?: Maybe<Scalars['Int']>;
+  /** @deprecated Use receiver_type instead. */
   recipient_type?: Maybe<Scalars['Int']>;
+  receiver_type?: Maybe<Scalars['Int']>;
   /** @deprecated Use banker_id instead. */
   pid?: Maybe<Scalars['ID']>;
   banker_id?: Maybe<Scalars['ID']>;
@@ -1098,7 +1132,8 @@ export enum QueryNationsOrderByColumn {
   Aircraft = 'AIRCRAFT',
   Ships = 'SHIPS',
   Missiles = 'MISSILES',
-  Nukes = 'NUKES'
+  Nukes = 'NUKES',
+  Cities = 'CITIES'
 }
 
 export type NationPaginator = {
@@ -1194,9 +1229,11 @@ export type Trade = {
   /** @deprecated Use sender_id instead. */
   sid?: Maybe<Scalars['ID']>;
   sender_id?: Maybe<Scalars['ID']>;
-  /** @deprecated Use recipient_id instead. */
+  /** @deprecated Use receiver_id instead. */
   rid?: Maybe<Scalars['ID']>;
+  /** @deprecated Use receiver_id instead. */
   recipient_id?: Maybe<Scalars['ID']>;
+  receiver_id?: Maybe<Scalars['ID']>;
   sender?: Maybe<Nation>;
   receiver?: Maybe<Nation>;
   offer_resource?: Maybe<Scalars['String']>;
@@ -1388,6 +1425,67 @@ export type BbPlayerPaginator = {
   data: Array<BbPlayer>;
 };
 
+export type QueryTreasureTradesOrderByOrderByClause = {
+  column: QueryTreasureTradesOrderByColumn;
+  order: SortOrder;
+};
+
+export enum QueryTreasureTradesOrderByColumn {
+  Id = 'ID',
+  Date = 'DATE'
+}
+
+export type TreasureTradePaginator = {
+  __typename?: 'TreasureTradePaginator';
+  paginatorInfo: PaginatorInfo;
+  data: Array<TreasureTrade>;
+};
+
+export type TreasureTrade = {
+  __typename?: 'TreasureTrade';
+  id?: Maybe<Scalars['ID']>;
+  offer_date?: Maybe<Scalars['DateTimeAuto']>;
+  accept_date?: Maybe<Scalars['DateTimeAuto']>;
+  sender_id?: Maybe<Scalars['ID']>;
+  sender?: Maybe<Nation>;
+  receiver_id?: Maybe<Scalars['ID']>;
+  receiver?: Maybe<Nation>;
+  buying?: Maybe<Scalars['Boolean']>;
+  selling?: Maybe<Scalars['Boolean']>;
+  treasure?: Maybe<Scalars['String']>;
+  money?: Maybe<Scalars['Int']>;
+  accepted?: Maybe<Scalars['Boolean']>;
+  rejected?: Maybe<Scalars['Boolean']>;
+  seller_cancelled?: Maybe<Scalars['Boolean']>;
+};
+
+export type QueryEmbargoesOrderByOrderByClause = {
+  column: QueryEmbargoesOrderByColumn;
+  order: SortOrder;
+};
+
+export enum QueryEmbargoesOrderByColumn {
+  Id = 'ID',
+  Date = 'DATE'
+}
+
+export type EmbargoPaginator = {
+  __typename?: 'EmbargoPaginator';
+  paginatorInfo: PaginatorInfo;
+  data: Array<Embargo>;
+};
+
+export type Embargo = {
+  __typename?: 'Embargo';
+  id?: Maybe<Scalars['ID']>;
+  date?: Maybe<Scalars['Date']>;
+  sender_id?: Maybe<Scalars['ID']>;
+  sender?: Maybe<Nation>;
+  receiver_id?: Maybe<Scalars['ID']>;
+  receiver?: Maybe<Nation>;
+  reason?: Maybe<Scalars['String']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   bankDeposit: Bankrec;
@@ -1428,6 +1526,291 @@ export type MutationBankWithdrawArgs = {
   aluminum?: InputMaybe<Scalars['Float']>;
   food?: InputMaybe<Scalars['Float']>;
   note?: InputMaybe<Scalars['String']>;
+};
+
+export type Subscription = {
+  __typename?: 'Subscription';
+  allianceCreate?: Maybe<Alliance>;
+  allianceDelete?: Maybe<Alliance>;
+  allianceUpdate?: Maybe<Alliance>;
+  alliancePositionCreate?: Maybe<AlliancePosition>;
+  alliancePositionDelete?: Maybe<AlliancePosition>;
+  alliancePositionUpdate?: Maybe<AlliancePosition>;
+  bankrecCreate?: Maybe<Bankrec>;
+  bbgameCreate?: Maybe<BbGame>;
+  bbgameDelete?: Maybe<BbGame>;
+  bbgameUpdate?: Maybe<BbGame>;
+  bbplayerCreate?: Maybe<BbPlayer>;
+  bbplayerDelete?: Maybe<BbPlayer>;
+  bbplayerUpdate?: Maybe<BbPlayer>;
+  bbteamCreate?: Maybe<BbTeam>;
+  bbteamDelete?: Maybe<BbTeam>;
+  bbteamUpdate?: Maybe<BbTeam>;
+  bountyCreate?: Maybe<Bounty>;
+  bountyDelete?: Maybe<Bounty>;
+  bountyUpdate?: Maybe<Bounty>;
+  cityCreate?: Maybe<City>;
+  cityDelete?: Maybe<City>;
+  cityUpdate?: Maybe<City>;
+  embargoCreate?: Maybe<Embargo>;
+  embargoDelete?: Maybe<Embargo>;
+  nationCreate?: Maybe<Nation>;
+  nationDelete?: Maybe<Nation>;
+  nationUpdate?: Maybe<Nation>;
+  taxBracketCreate?: Maybe<TaxBracket>;
+  taxBracketDelete?: Maybe<TaxBracket>;
+  taxBracketUpdate?: Maybe<TaxBracket>;
+  tradeCreate?: Maybe<Trade>;
+  tradeDelete?: Maybe<Trade>;
+  tradeUpdate?: Maybe<Trade>;
+  treasureTradeUpdate?: Maybe<TreasureTrade>;
+  treatyCreate?: Maybe<Treaty>;
+  treatyUpdate?: Maybe<Treaty>;
+  warCreate?: Maybe<War>;
+  warDelete?: Maybe<War>;
+  warUpdate?: Maybe<War>;
+  warAttackCreate?: Maybe<WarAttack>;
+  warAttackDelete?: Maybe<WarAttack>;
+};
+
+
+export type SubscriptionAllianceDeleteArgs = {
+  id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+
+
+export type SubscriptionAllianceUpdateArgs = {
+  id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+
+
+export type SubscriptionAlliancePositionCreateArgs = {
+  id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+
+
+export type SubscriptionAlliancePositionDeleteArgs = {
+  id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+
+
+export type SubscriptionAlliancePositionUpdateArgs = {
+  id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+
+
+export type SubscriptionBankrecCreateArgs = {
+  sid?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  stype?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  rid?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  rtype?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+
+
+export type SubscriptionBbgameCreateArgs = {
+  team_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+
+
+export type SubscriptionBbgameDeleteArgs = {
+  id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  team_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+
+
+export type SubscriptionBbgameUpdateArgs = {
+  id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  team_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+
+
+export type SubscriptionBbplayerCreateArgs = {
+  team_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+
+
+export type SubscriptionBbplayerDeleteArgs = {
+  id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  team_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+
+
+export type SubscriptionBbplayerUpdateArgs = {
+  id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  team_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+
+
+export type SubscriptionBbteamCreateArgs = {
+  nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+
+
+export type SubscriptionBbteamDeleteArgs = {
+  id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+
+
+export type SubscriptionBbteamUpdateArgs = {
+  id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+
+
+export type SubscriptionBountyCreateArgs = {
+  nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+
+
+export type SubscriptionBountyDeleteArgs = {
+  id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+
+
+export type SubscriptionBountyUpdateArgs = {
+  id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+
+
+export type SubscriptionCityCreateArgs = {
+  id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+
+
+export type SubscriptionCityDeleteArgs = {
+  id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+
+
+export type SubscriptionCityUpdateArgs = {
+  id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+
+
+export type SubscriptionEmbargoCreateArgs = {
+  id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+
+
+export type SubscriptionEmbargoDeleteArgs = {
+  id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+
+
+export type SubscriptionNationCreateArgs = {
+  id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+
+
+export type SubscriptionNationDeleteArgs = {
+  id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+
+
+export type SubscriptionNationUpdateArgs = {
+  id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+
+
+export type SubscriptionTaxBracketCreateArgs = {
+  id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+
+
+export type SubscriptionTaxBracketDeleteArgs = {
+  id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+
+
+export type SubscriptionTaxBracketUpdateArgs = {
+  id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+
+
+export type SubscriptionTradeCreateArgs = {
+  nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  offer_resource?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  buy_or_sell?: InputMaybe<Scalars['String']>;
+};
+
+
+export type SubscriptionTradeDeleteArgs = {
+  id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  offer_resource?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  buy_or_sell?: InputMaybe<Scalars['String']>;
+};
+
+
+export type SubscriptionTradeUpdateArgs = {
+  id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  offer_resource?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  buy_or_sell?: InputMaybe<Scalars['String']>;
+};
+
+
+export type SubscriptionTreasureTradeUpdateArgs = {
+  id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+
+
+export type SubscriptionTreatyCreateArgs = {
+  alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+
+
+export type SubscriptionTreatyUpdateArgs = {
+  id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+
+
+export type SubscriptionWarCreateArgs = {
+  nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+
+
+export type SubscriptionWarDeleteArgs = {
+  id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+
+
+export type SubscriptionWarUpdateArgs = {
+  id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+
+
+export type SubscriptionWarAttackCreateArgs = {
+  war_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+
+
+export type SubscriptionWarAttackDeleteArgs = {
+  war_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
 };
 
 export type SimplePaginatorInfo = {

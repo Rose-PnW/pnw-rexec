@@ -1,3 +1,31 @@
+export class QueryRequest {
+    constructor(endpoint, args, request) {
+        this.endpoint = endpoint;
+        this.args = args;
+        this.request = request;
+    }
+    stringify() {
+        if (Object.keys(this.args).length > 0) {
+            const args = Object.entries(this.args).map(([k, v]) => `${k}:${stringifyArgs(v)}`).join(' ');
+            return `${this.endpoint}(${args}){${this.request.stringify()}}`;
+        }
+        else {
+            return `${this.endpoint}{${this.request.stringify()}}`;
+        }
+    }
+    parse(res) {
+        return this.request.parse(res);
+    }
+    hash() {
+        const args = stringifyArgs(this.args);
+        const req = this.request.hash();
+        let hash = 0;
+        for (const c of args)
+            hash = ((hash << 5) - hash) + c.charCodeAt(0);
+        hash = ((hash << 5) - hash) + req;
+        return hash;
+    }
+}
 export class Request {
     constructor() {
         this._fields = [];
@@ -10,10 +38,17 @@ export class Request {
         r._fields.push(...fields.map(f => f.toString()));
         return r;
     }
-    child(key, f) {
+    child(key, second, third) {
+        const f = (third === undefined ? second : third);
         const r = this;
         const child = f(Request.new());
-        r._fields.push(`${key}{${child.stringify()}}`);
+        if (second === undefined) {
+            r._fields.push(`${key}{${child.stringify()}}`);
+        }
+        else {
+            const cr = new QueryRequest(key, second, child);
+            r._fields.push(`${cr.stringify()}`);
+        }
         return r;
     }
     stringify() {

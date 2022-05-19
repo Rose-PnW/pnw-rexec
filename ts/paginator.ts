@@ -1,6 +1,5 @@
 import { Executor } from './executors.js';
-import { QueryRequest } from './queries.js';
-import { BaseRequest, Request } from './request.js';
+import { Arguments, BaseRequest, QueryRequest, Request } from './request.js';
 import { PaginatorInfo, Query } from "./types.js";
 
 type PaginatorType<T> = {
@@ -17,21 +16,22 @@ interface ParsedPaginatorInfo<T> {
   perPage: number,
   total: number,
 }
-export class PaginatorReturn<A extends {page?:number|null}, T, R, O> extends Array<R> {
+type PaginatorArgs<T> = Arguments<T> extends {page?:number|null} ? Arguments<T> : never;
+export class PaginatorReturn<T, R, O, A = PaginatorArgs<T>> extends Array<R> {
   info?: ParsedPaginatorInfo<R>;
-  private query?: QueryRequest<A, PaginatorType<T>, PaginatorType<R>>;
+  private query?: QueryRequest<PaginatorType<T>, PaginatorType<R>, A>;
   private executor?: Executor<O>;
   constructor(length: number);
   constructor(length?: number);
   constructor(...items: R[]);
   constructor(
     paginator: PaginatorType<R>,
-    query: QueryRequest<A, PaginatorType<T>, PaginatorType<R>>,
+    query: QueryRequest<PaginatorType<T>, PaginatorType<R>, A>,
     executor: Executor<O>
   );
   constructor(
     first?: number | R | PaginatorType<R> | undefined,
-    second?: QueryRequest<A, PaginatorType<T>, PaginatorType<R>> | R | undefined,
+    second?: QueryRequest<PaginatorType<T>, PaginatorType<R>, A> | R | undefined,
     third?: Executor<O> | undefined,
     ...rest: R[]
   ) {
@@ -42,7 +42,7 @@ export class PaginatorReturn<A extends {page?:number|null}, T, R, O> extends Arr
         Object.hasOwnProperty.call(first, 'paginatorInfo') &&
         second instanceof QueryRequest
       ) {
-        this.query = second as QueryRequest<A, PaginatorType<T>, PaginatorType<R>>;
+        this.query = second as QueryRequest<PaginatorType<T>, PaginatorType<R>, A>;
         const res = first as PaginatorType<R>;
         this.push(...res.data);
         this.info = this.parseInfo(res.paginatorInfo);
@@ -71,7 +71,7 @@ export class PaginatorReturn<A extends {page?:number|null}, T, R, O> extends Arr
   async fetchMore(options?: O): Promise<ParsedPaginatorInfo<R>> {
     if(this.info?.hasMorePages) {
       this.info.currentPage += 1;
-      const q = this.query as QueryRequest<A & {page:number}, PaginatorType<T>, PaginatorType<R>>;
+      const q = this.query as QueryRequest<PaginatorType<T>, PaginatorType<R>, A & {page:number}>;
       q.args.page = this.info.currentPage;
       const req = [q.endpoint, q] as [keyof Query, QueryRequest<any, any, any>];
       const res = await this.executor?.push([req], options) as {[K in string]: any};
@@ -92,11 +92,11 @@ export class PaginatorReturn<A extends {page?:number|null}, T, R, O> extends Arr
     return this.info as ParsedPaginatorInfo<R>;
   }
 }
-export class PaginatorRequest<A, T, R, O>
+export class PaginatorRequest<T, R, O, A = PaginatorArgs<T>>
 implements
-  BaseRequest<PaginatorType<T>, PaginatorReturn<A, T, R, O>>
+  BaseRequest<PaginatorType<T>, PaginatorReturn<T, R, O, A>>
 {
-  query: QueryRequest<A, PaginatorType<T>, PaginatorType<R>>;
+  query: QueryRequest<PaginatorType<T>, PaginatorType<R>, A>;
   executor: Executor<O>;
   constructor(endpoint: string, args: A, request: Request<T, R>, executor: Executor<O>) {
     const r: Request<PaginatorType<T>, {}> = new Request();
@@ -111,7 +111,7 @@ implements
   stringify(): string {
     return this.query.stringify();
   }
-  parse(res: PaginatorType<T>): PaginatorReturn<A, T, R, O> | undefined {
+  parse(res: PaginatorType<T>): PaginatorReturn<T, R, O, A> | undefined {
     const r = this.query.parse(res);
     return new PaginatorReturn(r as PaginatorType<R>, this.query, this.executor);
   }

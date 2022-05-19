@@ -17,6 +17,7 @@ export var AllianceNationsOrderByColumn;
     AllianceNationsOrderByColumn["Ships"] = "SHIPS";
     AllianceNationsOrderByColumn["Missiles"] = "MISSILES";
     AllianceNationsOrderByColumn["Nukes"] = "NUKES";
+    AllianceNationsOrderByColumn["Cities"] = "CITIES";
 })(AllianceNationsOrderByColumn || (AllianceNationsOrderByColumn = {}));
 export var SortOrder;
 (function (SortOrder) {
@@ -167,6 +168,7 @@ export var QueryNationsOrderByColumn;
     QueryNationsOrderByColumn["Ships"] = "SHIPS";
     QueryNationsOrderByColumn["Missiles"] = "MISSILES";
     QueryNationsOrderByColumn["Nukes"] = "NUKES";
+    QueryNationsOrderByColumn["Cities"] = "CITIES";
 })(QueryNationsOrderByColumn || (QueryNationsOrderByColumn = {}));
 export var QueryAlliancesOrderByColumn;
 (function (QueryAlliancesOrderByColumn) {
@@ -268,6 +270,16 @@ export var QueryBaseballPlayersOrderByColumn;
     QueryBaseballPlayersOrderByColumn["Awareness"] = "AWARENESS";
     QueryBaseballPlayersOrderByColumn["Overall"] = "OVERALL";
 })(QueryBaseballPlayersOrderByColumn || (QueryBaseballPlayersOrderByColumn = {}));
+export var QueryTreasureTradesOrderByColumn;
+(function (QueryTreasureTradesOrderByColumn) {
+    QueryTreasureTradesOrderByColumn["Id"] = "ID";
+    QueryTreasureTradesOrderByColumn["Date"] = "DATE";
+})(QueryTreasureTradesOrderByColumn || (QueryTreasureTradesOrderByColumn = {}));
+export var QueryEmbargoesOrderByColumn;
+(function (QueryEmbargoesOrderByColumn) {
+    QueryEmbargoesOrderByColumn["Id"] = "ID";
+    QueryEmbargoesOrderByColumn["Date"] = "DATE";
+})(QueryEmbargoesOrderByColumn || (QueryEmbargoesOrderByColumn = {}));
 export var OrderByRelationAggregateFunction;
 (function (OrderByRelationAggregateFunction) {
     OrderByRelationAggregateFunction["Count"] = "COUNT";

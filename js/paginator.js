@@ -1,5 +1,4 @@
-import { QueryRequest } from './queries.js';
-import { Request } from './request.js';
+import { QueryRequest, Request } from './request.js';
 export class PaginatorReturn extends Array {
     constructor(first, second, third, ...rest) {
         super();

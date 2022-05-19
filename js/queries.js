@@ -1,33 +1,5 @@
 import { PaginatorRequest } from './paginator.js';
-import { Request, stringifyArgs } from './request.js';
-export class QueryRequest {
-    constructor(endpoint, args, request) {
-        this.endpoint = endpoint;
-        this.args = args;
-        this.request = request;
-    }
-    stringify() {
-        if (Object.keys(this.args).length > 0) {
-            const args = Object.entries(this.args).map(([k, v]) => `${k}:${stringifyArgs(v)}`).join(' ');
-            return `${this.endpoint}(${args}){${this.request.stringify()}}`;
-        }
-        else {
-            return `${this.endpoint}{${this.request.stringify()}}`;
-        }
-    }
-    parse(res) {
-        return this.request.parse(res);
-    }
-    hash() {
-        const args = stringifyArgs(this.args);
-        const req = this.request.hash();
-        let hash = 0;
-        for (const c of args)
-            hash = ((hash << 5) - hash) + c.charCodeAt(0);
-        hash = ((hash << 5) - hash) + req;
-        return hash;
-    }
-}
+import { QueryRequest, Request } from './request.js';
 export class RequestBuilder {
     constructor(executor) {
         this.requests = {};

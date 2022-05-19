@@ -1,6 +1,5 @@
 import { Executor } from './executors.js';
-import { QueryRequest } from './queries.js';
-import { BaseRequest, Request } from './request.js';
+import { Arguments, BaseRequest, QueryRequest, Request } from './request.js';
 import { PaginatorInfo } from "./types.js";
 declare type PaginatorType<T> = {
     data: T[];
@@ -16,27 +15,28 @@ interface ParsedPaginatorInfo<T> {
     perPage: number;
     total: number;
 }
-export declare class PaginatorReturn<A extends {
+declare type PaginatorArgs<T> = Arguments<T> extends {
     page?: number | null;
-}, T, R, O> extends Array<R> {
+} ? Arguments<T> : never;
+export declare class PaginatorReturn<T, R, O, A = PaginatorArgs<T>> extends Array<R> {
     info?: ParsedPaginatorInfo<R>;
     private query?;
     private executor?;
     constructor(length: number);
     constructor(length?: number);
     constructor(...items: R[]);
-    constructor(paginator: PaginatorType<R>, query: QueryRequest<A, PaginatorType<T>, PaginatorType<R>>, executor: Executor<O>);
+    constructor(paginator: PaginatorType<R>, query: QueryRequest<PaginatorType<T>, PaginatorType<R>, A>, executor: Executor<O>);
     private parseInfo;
     fetchMore(options?: O): Promise<ParsedPaginatorInfo<R>>;
     fetchAll(options?: O): Promise<ParsedPaginatorInfo<R>>;
     fetchWhile(f: (info: ParsedPaginatorInfo<R>) => boolean, options?: O): Promise<ParsedPaginatorInfo<R>>;
 }
-export declare class PaginatorRequest<A, T, R, O> implements BaseRequest<PaginatorType<T>, PaginatorReturn<A, T, R, O>> {
-    query: QueryRequest<A, PaginatorType<T>, PaginatorType<R>>;
+export declare class PaginatorRequest<T, R, O, A = PaginatorArgs<T>> implements BaseRequest<PaginatorType<T>, PaginatorReturn<T, R, O, A>> {
+    query: QueryRequest<PaginatorType<T>, PaginatorType<R>, A>;
     executor: Executor<O>;
     constructor(endpoint: string, args: A, request: Request<T, R>, executor: Executor<O>);
     stringify(): string;
-    parse(res: PaginatorType<T>): PaginatorReturn<A, T, R, O> | undefined;
+    parse(res: PaginatorType<T>): PaginatorReturn<T, R, O, A> | undefined;
     hash(): number;
 }
 export {};

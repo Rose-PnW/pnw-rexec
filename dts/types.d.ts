@@ -42,6 +42,8 @@ export declare type Query = {
     baseball_games?: Maybe<BbGamePaginator>;
     baseball_teams?: Maybe<BbTeamPaginator>;
     baseball_players?: Maybe<BbPlayerPaginator>;
+    treasure_trades?: Maybe<TreasureTradePaginator>;
+    embargoes?: Maybe<EmbargoPaginator>;
 };
 export declare type QueryNationsArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
@@ -80,7 +82,7 @@ export declare type QueryTradesArgs = {
     max_id?: InputMaybe<Scalars['Int']>;
     type?: InputMaybe<TradeType>;
     nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
-    offer_resource?: InputMaybe<Scalars['String']>;
+    offer_resource?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
     buy_or_sell?: InputMaybe<Scalars['String']>;
     accepted?: InputMaybe<Scalars['Boolean']>;
     orderBy?: InputMaybe<Array<QueryTradesOrderByOrderByClause>>;
@@ -145,10 +147,12 @@ export declare type QueryBankrecsArgs = {
     page?: InputMaybe<Scalars['Int']>;
 };
 export declare type QueryBaseball_GamesArgs = {
+    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     min_id?: InputMaybe<Scalars['Int']>;
     max_id?: InputMaybe<Scalars['Int']>;
     team_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     orderBy?: InputMaybe<Array<QueryBaseballGamesOrderByOrderByClause>>;
+    open?: InputMaybe<Scalars['Boolean']>;
     first?: InputMaybe<Scalars['Int']>;
     page?: InputMaybe<Scalars['Int']>;
 };
@@ -165,9 +169,30 @@ export declare type QueryBaseball_PlayersArgs = {
     first?: InputMaybe<Scalars['Int']>;
     page?: InputMaybe<Scalars['Int']>;
 };
+export declare type QueryTreasure_TradesArgs = {
+    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    min_id?: InputMaybe<Scalars['Int']>;
+    max_id?: InputMaybe<Scalars['Int']>;
+    orderBy?: InputMaybe<Array<QueryTreasureTradesOrderByOrderByClause>>;
+    first?: InputMaybe<Scalars['Int']>;
+    page?: InputMaybe<Scalars['Int']>;
+};
+export declare type QueryEmbargoesArgs = {
+    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    min_id?: InputMaybe<Scalars['Int']>;
+    max_id?: InputMaybe<Scalars['Int']>;
+    orderBy?: InputMaybe<Array<QueryEmbargoesOrderByOrderByClause>>;
+    first?: InputMaybe<Scalars['Int']>;
+    page?: InputMaybe<Scalars['Int']>;
+};
 export declare type ApiKeyDetails = {
     __typename?: 'ApiKeyDetails';
     nation?: Maybe<Nation>;
+    key?: Maybe<Scalars['String']>;
+    requests?: Maybe<Scalars['Int']>;
+    max_requests?: Maybe<Scalars['Int']>;
 };
 export declare type Nation = {
     __typename?: 'Nation';
@@ -313,7 +338,7 @@ export declare type Nation = {
     wars_lost?: Maybe<Scalars['Int']>;
     tax_id?: Maybe<Scalars['ID']>;
     alliance_seniority?: Maybe<Scalars['Int']>;
-    baseball_teams?: Maybe<BbTeam>;
+    baseball_team?: Maybe<BbTeam>;
     gross_national_income?: Maybe<Scalars['Float']>;
     gross_domestic_product?: Maybe<Scalars['Float']>;
     soldier_casualties?: Maybe<Scalars['Int']>;
@@ -484,7 +509,8 @@ export declare enum AllianceNationsOrderByColumn {
     Aircraft = "AIRCRAFT",
     Ships = "SHIPS",
     Missiles = "MISSILES",
-    Nukes = "NUKES"
+    Nukes = "NUKES",
+    Cities = "CITIES"
 }
 export declare enum SortOrder {
     Asc = "ASC",
@@ -532,12 +558,16 @@ export declare type Bankrec = {
     /** @deprecated Use sender_type instead. */
     stype?: Maybe<Scalars['Int']>;
     sender_type?: Maybe<Scalars['Int']>;
-    /** @deprecated Use recipient_id instead. */
+    /** @deprecated Use receiver_id instead. */
     rid?: Maybe<Scalars['ID']>;
+    /** @deprecated Use receiver_id instead. */
     recipient_id?: Maybe<Scalars['ID']>;
-    /** @deprecated Use recipient_type instead. */
+    receiver_id?: Maybe<Scalars['ID']>;
+    /** @deprecated Use receiver_type instead. */
     rtype?: Maybe<Scalars['Int']>;
+    /** @deprecated Use receiver_type instead. */
     recipient_type?: Maybe<Scalars['Int']>;
+    receiver_type?: Maybe<Scalars['Int']>;
     /** @deprecated Use banker_id instead. */
     pid?: Maybe<Scalars['ID']>;
     banker_id?: Maybe<Scalars['ID']>;
@@ -1022,7 +1052,8 @@ export declare enum QueryNationsOrderByColumn {
     Aircraft = "AIRCRAFT",
     Ships = "SHIPS",
     Missiles = "MISSILES",
-    Nukes = "NUKES"
+    Nukes = "NUKES",
+    Cities = "CITIES"
 }
 export declare type NationPaginator = {
     __typename?: 'NationPaginator';
@@ -1106,9 +1137,11 @@ export declare type Trade = {
     /** @deprecated Use sender_id instead. */
     sid?: Maybe<Scalars['ID']>;
     sender_id?: Maybe<Scalars['ID']>;
-    /** @deprecated Use recipient_id instead. */
+    /** @deprecated Use receiver_id instead. */
     rid?: Maybe<Scalars['ID']>;
+    /** @deprecated Use receiver_id instead. */
     recipient_id?: Maybe<Scalars['ID']>;
+    receiver_id?: Maybe<Scalars['ID']>;
     sender?: Maybe<Nation>;
     receiver?: Maybe<Nation>;
     offer_resource?: Maybe<Scalars['String']>;
@@ -1272,6 +1305,59 @@ export declare type BbPlayerPaginator = {
     paginatorInfo: PaginatorInfo;
     data: Array<BbPlayer>;
 };
+export declare type QueryTreasureTradesOrderByOrderByClause = {
+    column: QueryTreasureTradesOrderByColumn;
+    order: SortOrder;
+};
+export declare enum QueryTreasureTradesOrderByColumn {
+    Id = "ID",
+    Date = "DATE"
+}
+export declare type TreasureTradePaginator = {
+    __typename?: 'TreasureTradePaginator';
+    paginatorInfo: PaginatorInfo;
+    data: Array<TreasureTrade>;
+};
+export declare type TreasureTrade = {
+    __typename?: 'TreasureTrade';
+    id?: Maybe<Scalars['ID']>;
+    offer_date?: Maybe<Scalars['DateTimeAuto']>;
+    accept_date?: Maybe<Scalars['DateTimeAuto']>;
+    sender_id?: Maybe<Scalars['ID']>;
+    sender?: Maybe<Nation>;
+    receiver_id?: Maybe<Scalars['ID']>;
+    receiver?: Maybe<Nation>;
+    buying?: Maybe<Scalars['Boolean']>;
+    selling?: Maybe<Scalars['Boolean']>;
+    treasure?: Maybe<Scalars['String']>;
+    money?: Maybe<Scalars['Int']>;
+    accepted?: Maybe<Scalars['Boolean']>;
+    rejected?: Maybe<Scalars['Boolean']>;
+    seller_cancelled?: Maybe<Scalars['Boolean']>;
+};
+export declare type QueryEmbargoesOrderByOrderByClause = {
+    column: QueryEmbargoesOrderByColumn;
+    order: SortOrder;
+};
+export declare enum QueryEmbargoesOrderByColumn {
+    Id = "ID",
+    Date = "DATE"
+}
+export declare type EmbargoPaginator = {
+    __typename?: 'EmbargoPaginator';
+    paginatorInfo: PaginatorInfo;
+    data: Array<Embargo>;
+};
+export declare type Embargo = {
+    __typename?: 'Embargo';
+    id?: Maybe<Scalars['ID']>;
+    date?: Maybe<Scalars['Date']>;
+    sender_id?: Maybe<Scalars['ID']>;
+    sender?: Maybe<Nation>;
+    receiver_id?: Maybe<Scalars['ID']>;
+    receiver?: Maybe<Nation>;
+    reason?: Maybe<Scalars['String']>;
+};
 export declare type Mutation = {
     __typename?: 'Mutation';
     bankDeposit: Bankrec;
@@ -1308,6 +1394,210 @@ export declare type MutationBankWithdrawArgs = {
     aluminum?: InputMaybe<Scalars['Float']>;
     food?: InputMaybe<Scalars['Float']>;
     note?: InputMaybe<Scalars['String']>;
+};
+export declare type Subscription = {
+    __typename?: 'Subscription';
+    allianceCreate?: Maybe<Alliance>;
+    allianceDelete?: Maybe<Alliance>;
+    allianceUpdate?: Maybe<Alliance>;
+    alliancePositionCreate?: Maybe<AlliancePosition>;
+    alliancePositionDelete?: Maybe<AlliancePosition>;
+    alliancePositionUpdate?: Maybe<AlliancePosition>;
+    bankrecCreate?: Maybe<Bankrec>;
+    bbgameCreate?: Maybe<BbGame>;
+    bbgameDelete?: Maybe<BbGame>;
+    bbgameUpdate?: Maybe<BbGame>;
+    bbplayerCreate?: Maybe<BbPlayer>;
+    bbplayerDelete?: Maybe<BbPlayer>;
+    bbplayerUpdate?: Maybe<BbPlayer>;
+    bbteamCreate?: Maybe<BbTeam>;
+    bbteamDelete?: Maybe<BbTeam>;
+    bbteamUpdate?: Maybe<BbTeam>;
+    bountyCreate?: Maybe<Bounty>;
+    bountyDelete?: Maybe<Bounty>;
+    bountyUpdate?: Maybe<Bounty>;
+    cityCreate?: Maybe<City>;
+    cityDelete?: Maybe<City>;
+    cityUpdate?: Maybe<City>;
+    embargoCreate?: Maybe<Embargo>;
+    embargoDelete?: Maybe<Embargo>;
+    nationCreate?: Maybe<Nation>;
+    nationDelete?: Maybe<Nation>;
+    nationUpdate?: Maybe<Nation>;
+    taxBracketCreate?: Maybe<TaxBracket>;
+    taxBracketDelete?: Maybe<TaxBracket>;
+    taxBracketUpdate?: Maybe<TaxBracket>;
+    tradeCreate?: Maybe<Trade>;
+    tradeDelete?: Maybe<Trade>;
+    tradeUpdate?: Maybe<Trade>;
+    treasureTradeUpdate?: Maybe<TreasureTrade>;
+    treatyCreate?: Maybe<Treaty>;
+    treatyUpdate?: Maybe<Treaty>;
+    warCreate?: Maybe<War>;
+    warDelete?: Maybe<War>;
+    warUpdate?: Maybe<War>;
+    warAttackCreate?: Maybe<WarAttack>;
+    warAttackDelete?: Maybe<WarAttack>;
+};
+export declare type SubscriptionAllianceDeleteArgs = {
+    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export declare type SubscriptionAllianceUpdateArgs = {
+    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export declare type SubscriptionAlliancePositionCreateArgs = {
+    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export declare type SubscriptionAlliancePositionDeleteArgs = {
+    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export declare type SubscriptionAlliancePositionUpdateArgs = {
+    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export declare type SubscriptionBankrecCreateArgs = {
+    sid?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    stype?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    rid?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    rtype?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export declare type SubscriptionBbgameCreateArgs = {
+    team_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export declare type SubscriptionBbgameDeleteArgs = {
+    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    team_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export declare type SubscriptionBbgameUpdateArgs = {
+    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    team_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export declare type SubscriptionBbplayerCreateArgs = {
+    team_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export declare type SubscriptionBbplayerDeleteArgs = {
+    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    team_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export declare type SubscriptionBbplayerUpdateArgs = {
+    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    team_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export declare type SubscriptionBbteamCreateArgs = {
+    nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export declare type SubscriptionBbteamDeleteArgs = {
+    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export declare type SubscriptionBbteamUpdateArgs = {
+    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export declare type SubscriptionBountyCreateArgs = {
+    nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export declare type SubscriptionBountyDeleteArgs = {
+    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export declare type SubscriptionBountyUpdateArgs = {
+    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export declare type SubscriptionCityCreateArgs = {
+    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export declare type SubscriptionCityDeleteArgs = {
+    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export declare type SubscriptionCityUpdateArgs = {
+    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export declare type SubscriptionEmbargoCreateArgs = {
+    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export declare type SubscriptionEmbargoDeleteArgs = {
+    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export declare type SubscriptionNationCreateArgs = {
+    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export declare type SubscriptionNationDeleteArgs = {
+    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export declare type SubscriptionNationUpdateArgs = {
+    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export declare type SubscriptionTaxBracketCreateArgs = {
+    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export declare type SubscriptionTaxBracketDeleteArgs = {
+    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export declare type SubscriptionTaxBracketUpdateArgs = {
+    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export declare type SubscriptionTradeCreateArgs = {
+    nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    offer_resource?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+    buy_or_sell?: InputMaybe<Scalars['String']>;
+};
+export declare type SubscriptionTradeDeleteArgs = {
+    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    offer_resource?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+    buy_or_sell?: InputMaybe<Scalars['String']>;
+};
+export declare type SubscriptionTradeUpdateArgs = {
+    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    offer_resource?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+    buy_or_sell?: InputMaybe<Scalars['String']>;
+};
+export declare type SubscriptionTreasureTradeUpdateArgs = {
+    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export declare type SubscriptionTreatyCreateArgs = {
+    alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export declare type SubscriptionTreatyUpdateArgs = {
+    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export declare type SubscriptionWarCreateArgs = {
+    nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export declare type SubscriptionWarDeleteArgs = {
+    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export declare type SubscriptionWarUpdateArgs = {
+    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export declare type SubscriptionWarAttackCreateArgs = {
+    war_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export declare type SubscriptionWarAttackDeleteArgs = {
+    war_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
 };
 export declare type SimplePaginatorInfo = {
     __typename?: 'SimplePaginatorInfo';
