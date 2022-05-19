@@ -1,3 +1,4 @@
+import { ChildArgs } from './children_args';
 import {
   City, Bounty, Trade, Treaty,
   Alliance, QueryAlliancesArgs, 
@@ -86,7 +87,7 @@ implements
   }
   child<R, F extends ChildrenKeys<ApiType>>(
     key: F,
-    args: Arguments<Child<ApiType[F]>>,
+    args: ChildArgs<ApiType, F>,
     f: (req: Request<Child<ApiType[F]>, {}>) => Request<Child<ApiType[F]>, R>
   ): Request<ApiType, Return & {[K in F]: ChildReturn<ApiType[F], R>}>;
   child<R, F extends ChildrenKeys<ApiType>>(
@@ -95,7 +96,7 @@ implements
   ): Request<ApiType, Return & {[K in F]: ChildReturn<ApiType[F], R>}>;
   child<R, F extends ChildrenKeys<ApiType>>(
     key: F,
-    second: Arguments<Child<ApiType[F]>> | ((req: Request<Child<ApiType[F]>, {}>) => Request<Child<ApiType[F]>, R>),
+    second: ChildArgs<ApiType, F> | ((req: Request<Child<ApiType[F]>, {}>) => Request<Child<ApiType[F]>, R>),
     third?: (req: Request<Child<ApiType[F]>, {}>) => Request<Child<ApiType[F]>, R>
   ): Request<ApiType, Return & {[K in F]: ChildReturn<ApiType[F], R>}> {
     const f = (third === undefined ? second : third) as (req: Request<Child<ApiType[F]>, {}>) => Request<Child<ApiType[F]>, R>;
