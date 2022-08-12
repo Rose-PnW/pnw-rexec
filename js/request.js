@@ -1,3 +1,11 @@
+export class RawArg {
+    constructor(inner) {
+        this.inner = inner;
+    }
+}
+export function Raw(inner) {
+    return new RawArg(inner);
+}
 export class QueryRequest {
     constructor(endpoint, args, request) {
         this.endpoint = endpoint;
@@ -43,7 +51,7 @@ export class Request {
         const r = this;
         const child = f(Request.new());
         if (second === undefined) {
-            r._fields.push(`${key}{${child.stringify()}}`);
+            r._fields.push(`${key.toString()}{${child.stringify()}}`);
         }
         else {
             const cr = new QueryRequest(key, second, child);
@@ -76,7 +84,10 @@ function stringifyObjArgs(args) {
     }
 }
 export function stringifyArgs(args) {
-    if (Array.isArray(args)) {
+    if (args instanceof RawArg) {
+        return args.inner;
+    }
+    else if (Array.isArray(args)) {
         return `[${args
             .sort()
             .map((v) => `${stringifyArgs(v)}`)
