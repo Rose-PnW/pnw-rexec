@@ -62,7 +62,7 @@ export class InstantExecutor implements Executor<{}> {
         }
       } else {
         if(response.status === 429) {
-          const seconds = Number(response.headers.get("x-ratelimit-reset-after"));
+          const seconds = Number(response.headers.get("x-ratelimit-reset-after")) ?? 60;
           await new Promise(resolve => setTimeout(resolve, seconds * 1000));
         } else {
           throw new QueryError(response, query);
@@ -222,10 +222,10 @@ export class RequesterProfile<O = {}> {
     return p;
   }
   cache(options?: CacheExecutorOptions): RequesterProfile<O & CacheExecutorOptions> {
-    return this.executor(CacheExecutor, options);
+    return this.executor(CacheExecutor, options ?? { cache: false, lifetime: 60_000 });
   }
   bin(options?: BinExecutorOptions): RequesterProfile<O & BinExecutorOptions> {
-    return this.executor(BinExecutor, options);
+    return this.executor(BinExecutor, options ?? { defer: false, timeout: 10_000 });
   }
   key(key: string) {
     this._key = key;

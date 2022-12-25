@@ -48,7 +48,7 @@ export class InstantExecutor {
             }
             else {
                 if (response.status === 429) {
-                    const seconds = Number(response.headers.get("x-ratelimit-reset-after"));
+                    const seconds = Number(response.headers.get("x-ratelimit-reset-after")) ?? 60;
                     await new Promise(resolve => setTimeout(resolve, seconds * 1000));
                 }
                 else {
@@ -167,10 +167,10 @@ export class RequesterProfile {
         return p;
     }
     cache(options) {
-        return this.executor(CacheExecutor, options);
+        return this.executor(CacheExecutor, options ?? { cache: false, lifetime: 60000 });
     }
     bin(options) {
-        return this.executor(BinExecutor, options);
+        return this.executor(BinExecutor, options ?? { defer: false, timeout: 10000 });
     }
     key(key) {
         this._key = key;
