@@ -48,7 +48,7 @@ export type Arguments<Q> = Q extends Nation ? OrRaw<QueryNationsArgs> :
   Q extends Treaty ? OrRaw<QueryTreatiesArgs> :
   never;
 
-export class QueryRequest<T, R, A = Arguments<T>>
+export class QueryRequest<T, R, A extends {} = Arguments<T>>
 implements
   BaseRequest<T, R>
 {
@@ -154,7 +154,7 @@ export function stringifyArgs<A>(args: A): string {
       .map((v) => `${stringifyArgs(v)}`)
       .join(',')
     }]`;
-  } else if(typeof args === 'object') {
+  } else if(typeof args === 'object' && args) {
     return `{${Object
       .entries(args)
       .sort(([a],[b])=> a > b ? -1 : a===b ? 0 : 1)

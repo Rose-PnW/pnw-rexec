@@ -93,7 +93,7 @@ export function stringifyArgs(args) {
             .map((v) => `${stringifyArgs(v)}`)
             .join(',')}]`;
     }
-    else if (typeof args === 'object') {
+    else if (typeof args === 'object' && args) {
         return `{${Object
             .entries(args)
             .sort(([a], [b]) => a > b ? -1 : a === b ? 0 : 1)

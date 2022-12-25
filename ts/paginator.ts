@@ -17,7 +17,7 @@ interface ParsedPaginatorInfo<T> {
   total: number,
 }
 type PaginatorArgs<T> = Arguments<T> extends {page?:number|null} ? Arguments<T> : never;
-export class PaginatorReturn<T, R, O, A = PaginatorArgs<T>> extends Array<R> {
+export class PaginatorReturn<T, R, O, A extends {} = PaginatorArgs<T>> extends Array<R> {
   info?: ParsedPaginatorInfo<R>;
   private query?: QueryRequest<PaginatorType<T>, PaginatorType<R>, A>;
   private executor?: Executor<O>;
@@ -92,7 +92,7 @@ export class PaginatorReturn<T, R, O, A = PaginatorArgs<T>> extends Array<R> {
     return this.info as ParsedPaginatorInfo<R>;
   }
 }
-export class PaginatorRequest<T, R, O, A = PaginatorArgs<T>>
+export class PaginatorRequest<T, R, O, A extends {} = PaginatorArgs<T>>
 implements
   BaseRequest<PaginatorType<T>, PaginatorReturn<T, R, O, A>>
 {

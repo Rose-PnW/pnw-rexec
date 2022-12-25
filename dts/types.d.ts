@@ -1,18 +1,18 @@
-export declare type Maybe<T> = T | null;
-export declare type InputMaybe<T> = Maybe<T>;
-export declare type Exact<T extends {
+export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
+export type Exact<T extends {
     [key: string]: unknown;
 }> = {
     [K in keyof T]: T[K];
 };
-export declare type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
     [SubKey in K]?: Maybe<T[SubKey]>;
 };
-export declare type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
     [SubKey in K]: Maybe<T[SubKey]>;
 };
 /** All built-in and custom scalars, mapped to their actual values */
-export declare type Scalars = {
+export type Scalars = {
     ID: string;
     String: string;
     Boolean: boolean;
@@ -23,7 +23,7 @@ export declare type Scalars = {
     DateTime: any;
     DateTimeTz: any;
 };
-export declare type Query = {
+export type Query = {
     __typename?: 'Query';
     me?: Maybe<ApiKeyDetails>;
     treasures?: Maybe<Array<Maybe<Treasure>>>;
@@ -45,7 +45,7 @@ export declare type Query = {
     treasure_trades?: Maybe<TreasureTradePaginator>;
     embargoes?: Maybe<EmbargoPaginator>;
 };
-export declare type QueryNationsArgs = {
+export type QueryNationsArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     nation_name?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
     leader_name?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -65,18 +65,18 @@ export declare type QueryNationsArgs = {
     first?: InputMaybe<Scalars['Int']>;
     page?: InputMaybe<Scalars['Int']>;
 };
-export declare type QueryAlliancesArgs = {
+export type QueryAlliancesArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     name?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
     orderBy?: InputMaybe<Array<QueryAlliancesOrderByOrderByClause>>;
     first?: InputMaybe<Scalars['Int']>;
     page?: InputMaybe<Scalars['Int']>;
 };
-export declare type QueryTradepricesArgs = {
+export type QueryTradepricesArgs = {
     first?: InputMaybe<Scalars['Int']>;
     page?: InputMaybe<Scalars['Int']>;
 };
-export declare type QueryTradesArgs = {
+export type QueryTradesArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     min_id?: InputMaybe<Scalars['Int']>;
     max_id?: InputMaybe<Scalars['Int']>;
@@ -89,7 +89,7 @@ export declare type QueryTradesArgs = {
     first?: InputMaybe<Scalars['Int']>;
     page?: InputMaybe<Scalars['Int']>;
 };
-export declare type QueryWarsArgs = {
+export type QueryWarsArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     min_id?: InputMaybe<Scalars['Int']>;
     max_id?: InputMaybe<Scalars['Int']>;
@@ -101,7 +101,7 @@ export declare type QueryWarsArgs = {
     first?: InputMaybe<Scalars['Int']>;
     page?: InputMaybe<Scalars['Int']>;
 };
-export declare type QueryBountiesArgs = {
+export type QueryBountiesArgs = {
     nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     min_amount?: InputMaybe<Scalars['Float']>;
     max_amount?: InputMaybe<Scalars['Float']>;
@@ -109,7 +109,7 @@ export declare type QueryBountiesArgs = {
     first?: InputMaybe<Scalars['Int']>;
     page?: InputMaybe<Scalars['Int']>;
 };
-export declare type QueryWarattacksArgs = {
+export type QueryWarattacksArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     min_id?: InputMaybe<Scalars['Int']>;
     max_id?: InputMaybe<Scalars['Int']>;
@@ -118,21 +118,21 @@ export declare type QueryWarattacksArgs = {
     first?: InputMaybe<Scalars['Int']>;
     page?: InputMaybe<Scalars['Int']>;
 };
-export declare type QueryTreatiesArgs = {
+export type QueryTreatiesArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     limit?: InputMaybe<Scalars['Int']>;
     orderBy?: InputMaybe<Array<QueryTreatiesOrderByOrderByClause>>;
     first?: InputMaybe<Scalars['Int']>;
     page?: InputMaybe<Scalars['Int']>;
 };
-export declare type QueryCitiesArgs = {
+export type QueryCitiesArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     orderBy?: InputMaybe<Array<QueryCitiesOrderByOrderByClause>>;
     first?: InputMaybe<Scalars['Int']>;
     page?: InputMaybe<Scalars['Int']>;
 };
-export declare type QueryBankrecsArgs = {
+export type QueryBankrecsArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     min_id?: InputMaybe<Scalars['Int']>;
     max_id?: InputMaybe<Scalars['Int']>;
@@ -146,7 +146,7 @@ export declare type QueryBankrecsArgs = {
     first?: InputMaybe<Scalars['Int']>;
     page?: InputMaybe<Scalars['Int']>;
 };
-export declare type QueryBaseball_GamesArgs = {
+export type QueryBaseball_GamesArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     min_id?: InputMaybe<Scalars['Int']>;
     max_id?: InputMaybe<Scalars['Int']>;
@@ -156,20 +156,20 @@ export declare type QueryBaseball_GamesArgs = {
     first?: InputMaybe<Scalars['Int']>;
     page?: InputMaybe<Scalars['Int']>;
 };
-export declare type QueryBaseball_TeamsArgs = {
+export type QueryBaseball_TeamsArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     orderBy?: InputMaybe<Array<QueryBaseballTeamsOrderByOrderByClause>>;
     first?: InputMaybe<Scalars['Int']>;
     page?: InputMaybe<Scalars['Int']>;
 };
-export declare type QueryBaseball_PlayersArgs = {
+export type QueryBaseball_PlayersArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     team_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     orderBy?: InputMaybe<Array<QueryBaseballPlayersOrderByOrderByClause>>;
     first?: InputMaybe<Scalars['Int']>;
     page?: InputMaybe<Scalars['Int']>;
 };
-export declare type QueryTreasure_TradesArgs = {
+export type QueryTreasure_TradesArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     min_id?: InputMaybe<Scalars['Int']>;
@@ -178,7 +178,7 @@ export declare type QueryTreasure_TradesArgs = {
     first?: InputMaybe<Scalars['Int']>;
     page?: InputMaybe<Scalars['Int']>;
 };
-export declare type QueryEmbargoesArgs = {
+export type QueryEmbargoesArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     min_id?: InputMaybe<Scalars['Int']>;
@@ -187,14 +187,14 @@ export declare type QueryEmbargoesArgs = {
     first?: InputMaybe<Scalars['Int']>;
     page?: InputMaybe<Scalars['Int']>;
 };
-export declare type ApiKeyDetails = {
+export type ApiKeyDetails = {
     __typename?: 'ApiKeyDetails';
     nation?: Maybe<Nation>;
     key?: Maybe<Scalars['String']>;
     requests?: Maybe<Scalars['Int']>;
     max_requests?: Maybe<Scalars['Int']>;
 };
-export declare type Nation = {
+export type Nation = {
     __typename?: 'Nation';
     id?: Maybe<Scalars['ID']>;
     alliance_id?: Maybe<Scalars['ID']>;
@@ -357,12 +357,12 @@ export declare type Nation = {
     spy_kills?: Maybe<Scalars['Int']>;
     money_looted?: Maybe<Scalars['Float']>;
 };
-export declare type NationWarsArgs = {
+export type NationWarsArgs = {
     min_id?: InputMaybe<Scalars['Int']>;
     max_id?: InputMaybe<Scalars['Int']>;
     active?: InputMaybe<Scalars['Boolean']>;
 };
-export declare type NationBankrecsArgs = {
+export type NationBankrecsArgs = {
     min_id?: InputMaybe<Scalars['Int']>;
     max_id?: InputMaybe<Scalars['Int']>;
     stype?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
@@ -373,7 +373,7 @@ export declare type NationBankrecsArgs = {
     or_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     orderBy?: InputMaybe<Array<NationBankrecsOrderByOrderByClause>>;
 };
-export declare type NationTaxrecsArgs = {
+export type NationTaxrecsArgs = {
     min_id?: InputMaybe<Scalars['Int']>;
     max_id?: InputMaybe<Scalars['Int']>;
     stype?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
@@ -392,7 +392,7 @@ export declare enum AlliancePositionEnum {
     Heir = "HEIR",
     Leader = "LEADER"
 }
-export declare type AlliancePosition = {
+export type AlliancePosition = {
     __typename?: 'AlliancePosition';
     id?: Maybe<Scalars['ID']>;
     date?: Maybe<Scalars['DateTimeAuto']>;
@@ -423,7 +423,7 @@ export declare type AlliancePosition = {
     manage_embargoes?: Maybe<Scalars['Boolean']>;
     promote_self_to_leader?: Maybe<Scalars['Boolean']>;
 };
-export declare type Alliance = {
+export type Alliance = {
     __typename?: 'Alliance';
     id?: Maybe<Scalars['ID']>;
     name?: Maybe<Scalars['String']>;
@@ -465,7 +465,7 @@ export declare type Alliance = {
     aluminum?: Maybe<Scalars['Float']>;
     food?: Maybe<Scalars['Float']>;
 };
-export declare type AllianceNationsArgs = {
+export type AllianceNationsArgs = {
     alliance_position?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     min_score?: InputMaybe<Scalars['Float']>;
     max_score?: InputMaybe<Scalars['Float']>;
@@ -475,7 +475,7 @@ export declare type AllianceNationsArgs = {
     tax_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     orderBy?: InputMaybe<Array<AllianceNationsOrderByOrderByClause>>;
 };
-export declare type AllianceBankrecsArgs = {
+export type AllianceBankrecsArgs = {
     min_id?: InputMaybe<Scalars['Int']>;
     max_id?: InputMaybe<Scalars['Int']>;
     stype?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
@@ -486,7 +486,7 @@ export declare type AllianceBankrecsArgs = {
     or_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     orderBy?: InputMaybe<Array<AllianceBankrecsOrderByOrderByClause>>;
 };
-export declare type AllianceTaxrecsArgs = {
+export type AllianceTaxrecsArgs = {
     min_id?: InputMaybe<Scalars['Int']>;
     max_id?: InputMaybe<Scalars['Int']>;
     stype?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
@@ -497,7 +497,7 @@ export declare type AllianceTaxrecsArgs = {
     or_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     orderBy?: InputMaybe<Array<AllianceTaxrecsOrderByOrderByClause>>;
 };
-export declare type AllianceNationsOrderByOrderByClause = {
+export type AllianceNationsOrderByOrderByClause = {
     column: AllianceNationsOrderByColumn;
     order: SortOrder;
 };
@@ -516,7 +516,7 @@ export declare enum SortOrder {
     Asc = "ASC",
     Desc = "DESC"
 }
-export declare type Treaty = {
+export type Treaty = {
     __typename?: 'Treaty';
     id?: Maybe<Scalars['ID']>;
     date?: Maybe<Scalars['DateTimeAuto']>;
@@ -528,7 +528,7 @@ export declare type Treaty = {
     alliance2_id?: Maybe<Scalars['ID']>;
     alliance2?: Maybe<Alliance>;
 };
-export declare type AllianceBankrecsOrderByOrderByClause = {
+export type AllianceBankrecsOrderByOrderByClause = {
     column: AllianceBankrecsOrderByColumn;
     order: SortOrder;
 };
@@ -548,7 +548,7 @@ export declare enum AllianceBankrecsOrderByColumn {
     Aluminum = "ALUMINUM",
     Food = "FOOD"
 }
-export declare type Bankrec = {
+export type Bankrec = {
     __typename?: 'Bankrec';
     id?: Maybe<Scalars['ID']>;
     date?: Maybe<Scalars['DateTimeAuto']>;
@@ -586,7 +586,7 @@ export declare type Bankrec = {
     food?: Maybe<Scalars['Float']>;
     tax_id?: Maybe<Scalars['ID']>;
 };
-export declare type AllianceTaxrecsOrderByOrderByClause = {
+export type AllianceTaxrecsOrderByOrderByClause = {
     column: AllianceTaxrecsOrderByColumn;
     order: SortOrder;
 };
@@ -606,7 +606,7 @@ export declare enum AllianceTaxrecsOrderByColumn {
     Aluminum = "ALUMINUM",
     Food = "FOOD"
 }
-export declare type TaxBracket = {
+export type TaxBracket = {
     __typename?: 'TaxBracket';
     id?: Maybe<Scalars['ID']>;
     alliance_id?: Maybe<Scalars['ID']>;
@@ -639,7 +639,7 @@ export declare enum DomesticPolicy {
     Urbanization = "URBANIZATION",
     RapidExpansion = "RAPID_EXPANSION"
 }
-export declare type City = {
+export type City = {
     __typename?: 'City';
     id?: Maybe<Scalars['ID']>;
     nation_id?: Maybe<Scalars['ID']>;
@@ -716,7 +716,7 @@ export declare type City = {
     nukedate?: Maybe<Scalars['Date']>;
     nuke_date?: Maybe<Scalars['Date']>;
 };
-export declare type Treasure = {
+export type Treasure = {
     __typename?: 'Treasure';
     name?: Maybe<Scalars['String']>;
     color?: Maybe<Scalars['String']>;
@@ -728,7 +728,7 @@ export declare type Treasure = {
     nation_id?: Maybe<Scalars['ID']>;
     nation?: Maybe<Nation>;
 };
-export declare type War = {
+export type War = {
     __typename?: 'War';
     id?: Maybe<Scalars['ID']>;
     date?: Maybe<Scalars['DateTimeAuto']>;
@@ -803,7 +803,7 @@ export declare type War = {
     att_infra_destroyed_value?: Maybe<Scalars['Float']>;
     def_infra_destroyed_value?: Maybe<Scalars['Float']>;
 };
-export declare type WarAttacksArgs = {
+export type WarAttacksArgs = {
     min_id?: InputMaybe<Scalars['Int']>;
     max_id?: InputMaybe<Scalars['Int']>;
     war_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
@@ -814,7 +814,7 @@ export declare enum WarType {
     Attrition = "ATTRITION",
     Raid = "RAID"
 }
-export declare type WarAttacksOrderByOrderByClause = {
+export type WarAttacksOrderByOrderByClause = {
     column: WarAttacksOrderByColumn;
     order: SortOrder;
 };
@@ -822,7 +822,7 @@ export declare enum WarAttacksOrderByColumn {
     Id = "ID",
     Date = "DATE"
 }
-export declare type WarAttack = {
+export type WarAttack = {
     __typename?: 'WarAttack';
     id?: Maybe<Scalars['ID']>;
     date?: Maybe<Scalars['DateTimeAuto']>;
@@ -885,7 +885,7 @@ export declare enum AttackType {
     Victory = "VICTORY",
     Allianceloot = "ALLIANCELOOT"
 }
-export declare type NationBankrecsOrderByOrderByClause = {
+export type NationBankrecsOrderByOrderByClause = {
     column: NationBankrecsOrderByColumn;
     order: SortOrder;
 };
@@ -905,7 +905,7 @@ export declare enum NationBankrecsOrderByColumn {
     Aluminum = "ALUMINUM",
     Food = "FOOD"
 }
-export declare type NationTaxrecsOrderByOrderByClause = {
+export type NationTaxrecsOrderByOrderByClause = {
     column: NationTaxrecsOrderByColumn;
     order: SortOrder;
 };
@@ -925,7 +925,7 @@ export declare enum NationTaxrecsOrderByColumn {
     Aluminum = "ALUMINUM",
     Food = "FOOD"
 }
-export declare type Bounty = {
+export type Bounty = {
     __typename?: 'Bounty';
     id?: Maybe<Scalars['ID']>;
     date?: Maybe<Scalars['DateTimeAuto']>;
@@ -940,7 +940,7 @@ export declare enum BountyType {
     Raid = "RAID",
     Nuclear = "NUCLEAR"
 }
-export declare type BbTeam = {
+export type BbTeam = {
     __typename?: 'BBTeam';
     id?: Maybe<Scalars['ID']>;
     date?: Maybe<Scalars['DateTimeAuto']>;
@@ -963,12 +963,12 @@ export declare type BbTeam = {
     games?: Maybe<Array<Maybe<BbGame>>>;
     players?: Maybe<Array<Maybe<BbPlayer>>>;
 };
-export declare type BbTeamGamesArgs = {
+export type BbTeamGamesArgs = {
     min_id?: InputMaybe<Scalars['Int']>;
     max_id?: InputMaybe<Scalars['Int']>;
     orderBy?: InputMaybe<Array<BbTeamGamesOrderByOrderByClause>>;
 };
-export declare type BbTeamGamesOrderByOrderByClause = {
+export type BbTeamGamesOrderByOrderByClause = {
     column: BbTeamGamesOrderByColumn;
     order: SortOrder;
 };
@@ -978,7 +978,7 @@ export declare enum BbTeamGamesOrderByColumn {
     Htscore = "HTSCORE",
     Atscore = "ATSCORE"
 }
-export declare type BbGame = {
+export type BbGame = {
     __typename?: 'BBGame';
     id?: Maybe<Scalars['ID']>;
     date?: Maybe<Scalars['DateTimeAuto']>;
@@ -1000,7 +1000,7 @@ export declare type BbGame = {
     open?: Maybe<Scalars['Int']>;
     wager?: Maybe<Scalars['Float']>;
 };
-export declare type BbPlayer = {
+export type BbPlayer = {
     __typename?: 'BBPlayer';
     id?: Maybe<Scalars['ID']>;
     date?: Maybe<Scalars['DateTimeAuto']>;
@@ -1018,18 +1018,18 @@ export declare type BbPlayer = {
     overall?: Maybe<Scalars['Float']>;
     birthday?: Maybe<Scalars['Int']>;
 };
-export declare type Color = {
+export type Color = {
     __typename?: 'Color';
     color?: Maybe<Scalars['String']>;
     bloc_name?: Maybe<Scalars['String']>;
     turn_bonus?: Maybe<Scalars['Int']>;
 };
-export declare type GameInfo = {
+export type GameInfo = {
     __typename?: 'GameInfo';
     game_date?: Maybe<Scalars['DateTimeAuto']>;
     radiation?: Maybe<Radiation>;
 };
-export declare type Radiation = {
+export type Radiation = {
     __typename?: 'Radiation';
     global?: Maybe<Scalars['Float']>;
     north_america?: Maybe<Scalars['Float']>;
@@ -1040,7 +1040,7 @@ export declare type Radiation = {
     australia?: Maybe<Scalars['Float']>;
     antarctica?: Maybe<Scalars['Float']>;
 };
-export declare type QueryNationsOrderByOrderByClause = {
+export type QueryNationsOrderByOrderByClause = {
     column: QueryNationsOrderByColumn;
     order: SortOrder;
 };
@@ -1055,12 +1055,12 @@ export declare enum QueryNationsOrderByColumn {
     Nukes = "NUKES",
     Cities = "CITIES"
 }
-export declare type NationPaginator = {
+export type NationPaginator = {
     __typename?: 'NationPaginator';
     paginatorInfo: PaginatorInfo;
     data: Array<Nation>;
 };
-export declare type PaginatorInfo = {
+export type PaginatorInfo = {
     __typename?: 'PaginatorInfo';
     count: Scalars['Int'];
     currentPage: Scalars['Int'];
@@ -1071,7 +1071,7 @@ export declare type PaginatorInfo = {
     perPage: Scalars['Int'];
     total: Scalars['Int'];
 };
-export declare type QueryAlliancesOrderByOrderByClause = {
+export type QueryAlliancesOrderByOrderByClause = {
     column: QueryAlliancesOrderByColumn;
     order: SortOrder;
 };
@@ -1080,17 +1080,17 @@ export declare enum QueryAlliancesOrderByColumn {
     Date = "DATE",
     Score = "SCORE"
 }
-export declare type AlliancePaginator = {
+export type AlliancePaginator = {
     __typename?: 'AlliancePaginator';
     paginatorInfo: PaginatorInfo;
     data: Array<Alliance>;
 };
-export declare type TradepricePaginator = {
+export type TradepricePaginator = {
     __typename?: 'TradepricePaginator';
     paginatorInfo: PaginatorInfo;
     data: Array<Tradeprice>;
 };
-export declare type Tradeprice = {
+export type Tradeprice = {
     __typename?: 'Tradeprice';
     id?: Maybe<Scalars['ID']>;
     date?: Maybe<Scalars['Date']>;
@@ -1112,7 +1112,7 @@ export declare enum TradeType {
     Personal = "PERSONAL",
     Alliance = "ALLIANCE"
 }
-export declare type QueryTradesOrderByOrderByClause = {
+export type QueryTradesOrderByOrderByClause = {
     column: QueryTradesOrderByColumn;
     order: SortOrder;
 };
@@ -1124,12 +1124,12 @@ export declare enum QueryTradesOrderByColumn {
     OfferAmount = "OFFER_AMOUNT",
     ReturnAmount = "RETURN_AMOUNT"
 }
-export declare type TradePaginator = {
+export type TradePaginator = {
     __typename?: 'TradePaginator';
     paginatorInfo: PaginatorInfo;
     data: Array<Trade>;
 };
-export declare type Trade = {
+export type Trade = {
     __typename?: 'Trade';
     id?: Maybe<Scalars['ID']>;
     type?: Maybe<TradeType>;
@@ -1154,7 +1154,7 @@ export declare type Trade = {
     date_accepted?: Maybe<Scalars['DateTimeAuto']>;
     original_trade_id?: Maybe<Scalars['ID']>;
 };
-export declare type QueryWarsOrderByOrderByClause = {
+export type QueryWarsOrderByOrderByClause = {
     column: QueryWarsOrderByColumn;
     order: SortOrder;
 };
@@ -1162,12 +1162,12 @@ export declare enum QueryWarsOrderByColumn {
     Id = "ID",
     Date = "DATE"
 }
-export declare type WarPaginator = {
+export type WarPaginator = {
     __typename?: 'WarPaginator';
     paginatorInfo: PaginatorInfo;
     data: Array<War>;
 };
-export declare type QueryBountiesOrderByOrderByClause = {
+export type QueryBountiesOrderByOrderByClause = {
     column: QueryBountiesOrderByColumn;
     order: SortOrder;
 };
@@ -1176,12 +1176,12 @@ export declare enum QueryBountiesOrderByColumn {
     Date = "DATE",
     Amount = "AMOUNT"
 }
-export declare type BountyPaginator = {
+export type BountyPaginator = {
     __typename?: 'BountyPaginator';
     paginatorInfo: PaginatorInfo;
     data: Array<Bounty>;
 };
-export declare type QueryWarattacksOrderByOrderByClause = {
+export type QueryWarattacksOrderByOrderByClause = {
     column: QueryWarattacksOrderByColumn;
     order: SortOrder;
 };
@@ -1189,12 +1189,12 @@ export declare enum QueryWarattacksOrderByColumn {
     Id = "ID",
     Date = "DATE"
 }
-export declare type WarAttackPaginator = {
+export type WarAttackPaginator = {
     __typename?: 'WarAttackPaginator';
     paginatorInfo: PaginatorInfo;
     data: Array<WarAttack>;
 };
-export declare type QueryTreatiesOrderByOrderByClause = {
+export type QueryTreatiesOrderByOrderByClause = {
     column: QueryTreatiesOrderByColumn;
     order: SortOrder;
 };
@@ -1203,12 +1203,12 @@ export declare enum QueryTreatiesOrderByColumn {
     Date = "DATE",
     TurnsLeft = "TURNS_LEFT"
 }
-export declare type TreatyPaginator = {
+export type TreatyPaginator = {
     __typename?: 'TreatyPaginator';
     paginatorInfo: PaginatorInfo;
     data: Array<Treaty>;
 };
-export declare type QueryCitiesOrderByOrderByClause = {
+export type QueryCitiesOrderByOrderByClause = {
     column: QueryCitiesOrderByColumn;
     order: SortOrder;
 };
@@ -1219,12 +1219,12 @@ export declare enum QueryCitiesOrderByColumn {
     Maxinfra = "MAXINFRA",
     Land = "LAND"
 }
-export declare type CityPaginator = {
+export type CityPaginator = {
     __typename?: 'CityPaginator';
     paginatorInfo: PaginatorInfo;
     data: Array<City>;
 };
-export declare type QueryBankrecsOrderByOrderByClause = {
+export type QueryBankrecsOrderByOrderByClause = {
     column: QueryBankrecsOrderByColumn;
     order: SortOrder;
 };
@@ -1244,12 +1244,12 @@ export declare enum QueryBankrecsOrderByColumn {
     Aluminum = "ALUMINUM",
     Food = "FOOD"
 }
-export declare type BankrecPaginator = {
+export type BankrecPaginator = {
     __typename?: 'BankrecPaginator';
     paginatorInfo: PaginatorInfo;
     data: Array<Bankrec>;
 };
-export declare type QueryBaseballGamesOrderByOrderByClause = {
+export type QueryBaseballGamesOrderByOrderByClause = {
     column: QueryBaseballGamesOrderByColumn;
     order: SortOrder;
 };
@@ -1259,12 +1259,12 @@ export declare enum QueryBaseballGamesOrderByColumn {
     Htscore = "HTSCORE",
     Atscore = "ATSCORE"
 }
-export declare type BbGamePaginator = {
+export type BbGamePaginator = {
     __typename?: 'BBGamePaginator';
     paginatorInfo: PaginatorInfo;
     data: Array<BbGame>;
 };
-export declare type QueryBaseballTeamsOrderByOrderByClause = {
+export type QueryBaseballTeamsOrderByOrderByClause = {
     column: QueryBaseballTeamsOrderByColumn;
     order: SortOrder;
 };
@@ -1281,12 +1281,12 @@ export declare enum QueryBaseballTeamsOrderByColumn {
     Strikeouts = "STRIKEOUTS",
     Games = "GAMES"
 }
-export declare type BbTeamPaginator = {
+export type BbTeamPaginator = {
     __typename?: 'BBTeamPaginator';
     paginatorInfo: PaginatorInfo;
     data: Array<BbTeam>;
 };
-export declare type QueryBaseballPlayersOrderByOrderByClause = {
+export type QueryBaseballPlayersOrderByOrderByClause = {
     column: QueryBaseballPlayersOrderByColumn;
     order: SortOrder;
 };
@@ -1300,12 +1300,12 @@ export declare enum QueryBaseballPlayersOrderByColumn {
     Awareness = "AWARENESS",
     Overall = "OVERALL"
 }
-export declare type BbPlayerPaginator = {
+export type BbPlayerPaginator = {
     __typename?: 'BBPlayerPaginator';
     paginatorInfo: PaginatorInfo;
     data: Array<BbPlayer>;
 };
-export declare type QueryTreasureTradesOrderByOrderByClause = {
+export type QueryTreasureTradesOrderByOrderByClause = {
     column: QueryTreasureTradesOrderByColumn;
     order: SortOrder;
 };
@@ -1313,12 +1313,12 @@ export declare enum QueryTreasureTradesOrderByColumn {
     Id = "ID",
     Date = "DATE"
 }
-export declare type TreasureTradePaginator = {
+export type TreasureTradePaginator = {
     __typename?: 'TreasureTradePaginator';
     paginatorInfo: PaginatorInfo;
     data: Array<TreasureTrade>;
 };
-export declare type TreasureTrade = {
+export type TreasureTrade = {
     __typename?: 'TreasureTrade';
     id?: Maybe<Scalars['ID']>;
     offer_date?: Maybe<Scalars['DateTimeAuto']>;
@@ -1335,7 +1335,7 @@ export declare type TreasureTrade = {
     rejected?: Maybe<Scalars['Boolean']>;
     seller_cancelled?: Maybe<Scalars['Boolean']>;
 };
-export declare type QueryEmbargoesOrderByOrderByClause = {
+export type QueryEmbargoesOrderByOrderByClause = {
     column: QueryEmbargoesOrderByColumn;
     order: SortOrder;
 };
@@ -1343,12 +1343,12 @@ export declare enum QueryEmbargoesOrderByColumn {
     Id = "ID",
     Date = "DATE"
 }
-export declare type EmbargoPaginator = {
+export type EmbargoPaginator = {
     __typename?: 'EmbargoPaginator';
     paginatorInfo: PaginatorInfo;
     data: Array<Embargo>;
 };
-export declare type Embargo = {
+export type Embargo = {
     __typename?: 'Embargo';
     id?: Maybe<Scalars['ID']>;
     date?: Maybe<Scalars['Date']>;
@@ -1358,12 +1358,12 @@ export declare type Embargo = {
     receiver?: Maybe<Nation>;
     reason?: Maybe<Scalars['String']>;
 };
-export declare type Mutation = {
+export type Mutation = {
     __typename?: 'Mutation';
     bankDeposit: Bankrec;
     bankWithdraw: Bankrec;
 };
-export declare type MutationBankDepositArgs = {
+export type MutationBankDepositArgs = {
     money?: InputMaybe<Scalars['Float']>;
     coal?: InputMaybe<Scalars['Float']>;
     oil?: InputMaybe<Scalars['Float']>;
@@ -1378,7 +1378,7 @@ export declare type MutationBankDepositArgs = {
     food?: InputMaybe<Scalars['Float']>;
     note?: InputMaybe<Scalars['String']>;
 };
-export declare type MutationBankWithdrawArgs = {
+export type MutationBankWithdrawArgs = {
     receiver: Scalars['ID'];
     receiver_type: Scalars['Int'];
     money?: InputMaybe<Scalars['Float']>;
@@ -1395,7 +1395,7 @@ export declare type MutationBankWithdrawArgs = {
     food?: InputMaybe<Scalars['Float']>;
     note?: InputMaybe<Scalars['String']>;
 };
-export declare type Subscription = {
+export type Subscription = {
     __typename?: 'Subscription';
     allianceCreate?: Maybe<Alliance>;
     allianceDelete?: Maybe<Alliance>;
@@ -1439,167 +1439,167 @@ export declare type Subscription = {
     warAttackCreate?: Maybe<WarAttack>;
     warAttackDelete?: Maybe<WarAttack>;
 };
-export declare type SubscriptionAllianceDeleteArgs = {
+export type SubscriptionAllianceDeleteArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
 };
-export declare type SubscriptionAllianceUpdateArgs = {
+export type SubscriptionAllianceUpdateArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
 };
-export declare type SubscriptionAlliancePositionCreateArgs = {
-    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
-    alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
-};
-export declare type SubscriptionAlliancePositionDeleteArgs = {
+export type SubscriptionAlliancePositionCreateArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
 };
-export declare type SubscriptionAlliancePositionUpdateArgs = {
+export type SubscriptionAlliancePositionDeleteArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
 };
-export declare type SubscriptionBankrecCreateArgs = {
+export type SubscriptionAlliancePositionUpdateArgs = {
+    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export type SubscriptionBankrecCreateArgs = {
     sid?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     stype?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     rid?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     rtype?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
 };
-export declare type SubscriptionBbgameCreateArgs = {
+export type SubscriptionBbgameCreateArgs = {
     team_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
 };
-export declare type SubscriptionBbgameDeleteArgs = {
-    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
-    team_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
-};
-export declare type SubscriptionBbgameUpdateArgs = {
+export type SubscriptionBbgameDeleteArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     team_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
 };
-export declare type SubscriptionBbplayerCreateArgs = {
-    team_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
-};
-export declare type SubscriptionBbplayerDeleteArgs = {
+export type SubscriptionBbgameUpdateArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     team_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
 };
-export declare type SubscriptionBbplayerUpdateArgs = {
+export type SubscriptionBbplayerCreateArgs = {
+    team_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export type SubscriptionBbplayerDeleteArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     team_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
 };
-export declare type SubscriptionBbteamCreateArgs = {
+export type SubscriptionBbplayerUpdateArgs = {
+    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    team_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export type SubscriptionBbteamCreateArgs = {
     nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
 };
-export declare type SubscriptionBbteamDeleteArgs = {
+export type SubscriptionBbteamDeleteArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
 };
-export declare type SubscriptionBbteamUpdateArgs = {
+export type SubscriptionBbteamUpdateArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
 };
-export declare type SubscriptionBountyCreateArgs = {
+export type SubscriptionBountyCreateArgs = {
     nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
 };
-export declare type SubscriptionBountyDeleteArgs = {
+export type SubscriptionBountyDeleteArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
 };
-export declare type SubscriptionBountyUpdateArgs = {
+export type SubscriptionBountyUpdateArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
 };
-export declare type SubscriptionCityCreateArgs = {
+export type SubscriptionCityCreateArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
 };
-export declare type SubscriptionCityDeleteArgs = {
+export type SubscriptionCityDeleteArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
 };
-export declare type SubscriptionCityUpdateArgs = {
+export type SubscriptionCityUpdateArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
 };
-export declare type SubscriptionEmbargoCreateArgs = {
+export type SubscriptionEmbargoCreateArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
 };
-export declare type SubscriptionEmbargoDeleteArgs = {
+export type SubscriptionEmbargoDeleteArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
 };
-export declare type SubscriptionNationCreateArgs = {
+export type SubscriptionNationCreateArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
 };
-export declare type SubscriptionNationDeleteArgs = {
+export type SubscriptionNationDeleteArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
 };
-export declare type SubscriptionNationUpdateArgs = {
+export type SubscriptionNationUpdateArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
 };
-export declare type SubscriptionTaxBracketCreateArgs = {
+export type SubscriptionTaxBracketCreateArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
 };
-export declare type SubscriptionTaxBracketDeleteArgs = {
+export type SubscriptionTaxBracketDeleteArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
 };
-export declare type SubscriptionTaxBracketUpdateArgs = {
+export type SubscriptionTaxBracketUpdateArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
 };
-export declare type SubscriptionTradeCreateArgs = {
+export type SubscriptionTradeCreateArgs = {
     nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     offer_resource?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
     buy_or_sell?: InputMaybe<Scalars['String']>;
 };
-export declare type SubscriptionTradeDeleteArgs = {
-    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
-    nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
-    offer_resource?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-    buy_or_sell?: InputMaybe<Scalars['String']>;
-};
-export declare type SubscriptionTradeUpdateArgs = {
+export type SubscriptionTradeDeleteArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     offer_resource?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
     buy_or_sell?: InputMaybe<Scalars['String']>;
 };
-export declare type SubscriptionTreasureTradeUpdateArgs = {
+export type SubscriptionTradeUpdateArgs = {
+    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    offer_resource?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+    buy_or_sell?: InputMaybe<Scalars['String']>;
+};
+export type SubscriptionTreasureTradeUpdateArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
 };
-export declare type SubscriptionTreatyCreateArgs = {
+export type SubscriptionTreatyCreateArgs = {
     alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
 };
-export declare type SubscriptionTreatyUpdateArgs = {
+export type SubscriptionTreatyUpdateArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
 };
-export declare type SubscriptionWarCreateArgs = {
+export type SubscriptionWarCreateArgs = {
     nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
 };
-export declare type SubscriptionWarDeleteArgs = {
-    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
-    nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
-    alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
-};
-export declare type SubscriptionWarUpdateArgs = {
+export type SubscriptionWarDeleteArgs = {
     id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
     alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
 };
-export declare type SubscriptionWarAttackCreateArgs = {
+export type SubscriptionWarUpdateArgs = {
+    id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    nation_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+    alliance_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+};
+export type SubscriptionWarAttackCreateArgs = {
     war_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
 };
-export declare type SubscriptionWarAttackDeleteArgs = {
+export type SubscriptionWarAttackDeleteArgs = {
     war_id?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
 };
-export declare type SimplePaginatorInfo = {
+export type SimplePaginatorInfo = {
     __typename?: 'SimplePaginatorInfo';
     count: Scalars['Int'];
     currentPage: Scalars['Int'];
@@ -1608,7 +1608,7 @@ export declare type SimplePaginatorInfo = {
     perPage: Scalars['Int'];
     hasMorePages: Scalars['Boolean'];
 };
-export declare type PageInfo = {
+export type PageInfo = {
     __typename?: 'PageInfo';
     hasNextPage: Scalars['Boolean'];
     hasPreviousPage: Scalars['Boolean'];
@@ -1629,7 +1629,7 @@ export declare enum OrderByRelationWithColumnAggregateFunction {
     Sum = "SUM",
     Count = "COUNT"
 }
-export declare type OrderByClause = {
+export type OrderByClause = {
     column: Scalars['String'];
     order: SortOrder;
 };

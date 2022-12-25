@@ -48,8 +48,8 @@ export class InstantExecutor {
             }
             else {
                 if (response.status === 429) {
-                    const seconds = Number(response.headers.get("x-ratelimit-reset-after")) ?? 60;
-                    await new Promise(resolve => setTimeout(resolve, seconds * 1000));
+                    const seconds = response.headers.get("x-ratelimit-reset-after") ?? 60;
+                    await new Promise(resolve => setTimeout(resolve, +seconds * 1000));
                 }
                 else {
                     throw new QueryError(response, query);
@@ -161,6 +161,7 @@ export class RequesterProfile {
     }
     executor(e, options) {
         const p = this;
+        // @ts-ignore
         const newOptions = Object.assign(this._defaultOptions, options);
         const executor = new e(p, this._executor, newOptions);
         p._executor = executor;

@@ -62,8 +62,8 @@ export class InstantExecutor implements Executor<{}> {
         }
       } else {
         if(response.status === 429) {
-          const seconds = Number(response.headers.get("x-ratelimit-reset-after")) ?? 60;
-          await new Promise(resolve => setTimeout(resolve, seconds * 1000));
+          const seconds = response.headers.get("x-ratelimit-reset-after") ?? 60;
+          await new Promise(resolve => setTimeout(resolve, +seconds * 1000));
         } else {
           throw new QueryError(response, query);
         }
@@ -211,12 +211,13 @@ type Constructor<O, N> = new (
 ) => Executor<O & N>;
 export class RequesterProfile<O = {}> {
   _defaultOptions: O = {} as O;
-  _executor: Executor<O> = new InstantExecutor(this) as any as Executor<O>;
+  _executor: Executor<O> = new InstantExecutor(this as RequesterProfile<{}>) as any as Executor<O>;
   _key?: string;
   _log?: (log: ExecutorLog) => void;
   executor<N, E extends Constructor<O, N>>(e: E, options: N): RequesterProfile<O & N> {
     const p = this as any as RequesterProfile<O & N>;
-    const newOptions = Object.assign(this._defaultOptions, options);
+    // @ts-ignore
+    const newOptions = Object.assign(this._defaultOptions, options) as (O & N);
     const executor = new e(p, this._executor, newOptions);
     p._executor = executor;
     return p;

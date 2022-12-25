@@ -1,7 +1,7 @@
 import { Executor } from './executors.js';
 import { Arguments, BaseRequest, QueryRequest, Request } from './request.js';
 import { PaginatorInfo } from "./types.js";
-declare type PaginatorType<T> = {
+type PaginatorType<T> = {
     data: T[];
     paginatorInfo?: Partial<PaginatorInfo>;
 };
@@ -15,10 +15,10 @@ interface ParsedPaginatorInfo<T> {
     perPage: number;
     total: number;
 }
-declare type PaginatorArgs<T> = Arguments<T> extends {
+type PaginatorArgs<T> = Arguments<T> extends {
     page?: number | null;
 } ? Arguments<T> : never;
-export declare class PaginatorReturn<T, R, O, A = PaginatorArgs<T>> extends Array<R> {
+export declare class PaginatorReturn<T, R, O, A extends {} = PaginatorArgs<T>> extends Array<R> {
     info?: ParsedPaginatorInfo<R>;
     private query?;
     private executor?;
@@ -31,7 +31,7 @@ export declare class PaginatorReturn<T, R, O, A = PaginatorArgs<T>> extends Arra
     fetchAll(options?: O): Promise<ParsedPaginatorInfo<R>>;
     fetchWhile(f: (info: ParsedPaginatorInfo<R>) => boolean, options?: O): Promise<ParsedPaginatorInfo<R>>;
 }
-export declare class PaginatorRequest<T, R, O, A = PaginatorArgs<T>> implements BaseRequest<PaginatorType<T>, PaginatorReturn<T, R, O, A>> {
+export declare class PaginatorRequest<T, R, O, A extends {} = PaginatorArgs<T>> implements BaseRequest<PaginatorType<T>, PaginatorReturn<T, R, O, A>> {
     query: QueryRequest<PaginatorType<T>, PaginatorType<R>, A>;
     executor: Executor<O>;
     constructor(endpoint: string, args: A, request: Request<T, R>, executor: Executor<O>);

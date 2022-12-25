@@ -51,7 +51,7 @@ export declare class CacheExecutor<O> implements Executor<O & CacheExecutorOptio
     private tryCache;
     push<R>(requests: [keyof Query, BaseRequest<any, any>][], options?: CacheExecutorOptions & O): Promise<R>;
 }
-declare type Constructor<O, N> = new (config: RequesterProfile<O & N>, executor: Executor<O>, options: O & N) => Executor<O & N>;
+type Constructor<O, N> = new (config: RequesterProfile<O & N>, executor: Executor<O>, options: O & N) => Executor<O & N>;
 export declare class RequesterProfile<O = {}> {
     _defaultOptions: O;
     _executor: Executor<O>;
