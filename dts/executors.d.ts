@@ -34,7 +34,6 @@ export declare class BinExecutor<O> implements Executor<O & BinExecutorOptions> 
     private bins;
     private executor;
     constructor(config: RequesterProfile<O & BinExecutorOptions>, executor: Executor<O>, options: O & BinExecutorOptions);
-    private run;
     private tryDefer;
     push<R>(requests: [keyof Query, BaseRequest<any, any>][], options?: O & BinExecutorOptions): Promise<R>;
 }

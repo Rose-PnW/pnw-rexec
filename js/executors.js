@@ -92,22 +92,13 @@ export class BinExecutor {
         this.executor = executor;
         this.defaultOptions = options;
     }
-    async run() {
+    async tryDefer(promise, options) {
+        if (options.defer)
+            await new Promise(res => setTimeout(res, options.timeout));
         const bins = this.bins;
         this.bins = [];
         await Promise.all(bins.map(bin => bin.run()));
-    }
-    async tryDefer(promise, options) {
-        if (options.defer) {
-            const timeout = setTimeout(() => this.run(), options.timeout);
-            const result = await promise;
-            clearTimeout(timeout);
-            return result;
-        }
-        else {
-            this.run();
-            return await promise;
-        }
+        return await promise;
     }
     async push(requests, options) {
         const res = await this.tryDefer(Promise.all(requests.map(([key, request]) => new Promise((res, rej) => {
