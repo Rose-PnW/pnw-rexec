@@ -55,11 +55,13 @@ export declare class RequesterProfile<O = {}> {
     _defaultOptions: O;
     _executor: Executor<O>;
     _key?: string;
+    _url: string;
     _log?: (log: ExecutorLog) => void;
     executor<N, E extends Constructor<O, N>>(e: E, options: N): RequesterProfile<O & N>;
     cache(options?: CacheExecutorOptions): RequesterProfile<O & CacheExecutorOptions>;
     bin(options?: BinExecutorOptions): RequesterProfile<O & BinExecutorOptions>;
     key(key: string): this;
+    url(url: string): this;
     log(log: (log: ExecutorLog) => void): this;
     request(): RequestBuilder<O, {}>;
 }

@@ -28,11 +28,8 @@ export class InstantExecutor implements Executor<{}> {
     this.config = config;
   }
   private url() {
-    if(this.config._key) {
-      return `https://api.politicsandwar.com/graphql?api_key=${this.config._key}`;
-    } else {
-      throw new Error("No API key provided");
-    }
+    if(!this.config._key) throw new Error("No API key provided");
+    return this.config._url + '?api_key=' + this.config._key;
   }
   async push<R>(requests: [keyof Query, BaseRequest<any, any>][]): Promise<R> {
     while(true) {
@@ -205,6 +202,7 @@ export class RequesterProfile<O = {}> {
   _defaultOptions: O = {} as O;
   _executor: Executor<O> = new InstantExecutor(this as RequesterProfile<{}>) as any as Executor<O>;
   _key?: string;
+  _url: string = 'https://api.politicsandwar.com/graphql';
   _log?: (log: ExecutorLog) => void;
   executor<N, E extends Constructor<O, N>>(e: E, options: N): RequesterProfile<O & N> {
     const p = this as any as RequesterProfile<O & N>;
@@ -222,6 +220,10 @@ export class RequesterProfile<O = {}> {
   }
   key(key: string) {
     this._key = key;
+    return this;
+  }
+  url(url: string) {
+    this._url = url;
     return this;
   }
   log(log: (log: ExecutorLog) => void) {

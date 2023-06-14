@@ -11,12 +11,9 @@ export class InstantExecutor {
         this.config = config;
     }
     url() {
-        if (this.config._key) {
-            return `https://api.politicsandwar.com/graphql?api_key=${this.config._key}`;
-        }
-        else {
+        if (!this.config._key)
             throw new Error("No API key provided");
-        }
+        return this.config._url + '?api_key=' + this.config._key;
     }
     async push(requests) {
         while (true) {
@@ -149,6 +146,7 @@ export class RequesterProfile {
     constructor() {
         this._defaultOptions = {};
         this._executor = new InstantExecutor(this);
+        this._url = 'https://api.politicsandwar.com/graphql';
     }
     executor(e, options) {
         const p = this;
@@ -166,6 +164,10 @@ export class RequesterProfile {
     }
     key(key) {
         this._key = key;
+        return this;
+    }
+    url(url) {
+        this._url = url;
         return this;
     }
     log(log) {
