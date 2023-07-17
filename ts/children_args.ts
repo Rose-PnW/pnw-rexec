@@ -1,8 +1,8 @@
 import { Alliance, AllianceBankrecsArgs, AllianceNationsArgs, AllianceTaxrecsArgs, Bankrec, BbTeam, BbTeamGamesArgs, Nation, NationBankrecsArgs, NationWarsArgs, War, WarAttacksArgs } from "./types"
 
 type NationChildArgs<Child> = Child extends 'wars' ? NationWarsArgs
-  : Child extends 'offensivewars' ? NationWarsArgs
-  : Child extends 'defensivewars' ? NationWarsArgs
+  : Child extends 'offensive_wars' ? NationWarsArgs
+  : Child extends 'defensive_wars' ? NationWarsArgs
   : Child extends 'bankrecs' ? NationBankrecsArgs
   : Child extends 'taxrecs' ? NationBankrecsArgs
   : never;
