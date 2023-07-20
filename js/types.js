@@ -24,6 +24,12 @@ export var SortOrder;
     SortOrder["Asc"] = "ASC";
     SortOrder["Desc"] = "DESC";
 })(SortOrder || (SortOrder = {}));
+export var AllianceTreatiesOrderByColumn;
+(function (AllianceTreatiesOrderByColumn) {
+    AllianceTreatiesOrderByColumn["Id"] = "ID";
+    AllianceTreatiesOrderByColumn["Date"] = "DATE";
+    AllianceTreatiesOrderByColumn["TurnsLeft"] = "TURNS_LEFT";
+})(AllianceTreatiesOrderByColumn || (AllianceTreatiesOrderByColumn = {}));
 export var AllianceBankrecsOrderByColumn;
 (function (AllianceBankrecsOrderByColumn) {
     AllianceBankrecsOrderByColumn["Id"] = "ID";
@@ -58,28 +64,19 @@ export var AllianceTaxrecsOrderByColumn;
     AllianceTaxrecsOrderByColumn["Aluminum"] = "ALUMINUM";
     AllianceTaxrecsOrderByColumn["Food"] = "FOOD";
 })(AllianceTaxrecsOrderByColumn || (AllianceTaxrecsOrderByColumn = {}));
-export var WarPolicy;
-(function (WarPolicy) {
-    WarPolicy["Attrition"] = "ATTRITION";
-    WarPolicy["Turtle"] = "TURTLE";
-    WarPolicy["Blitzkrieg"] = "BLITZKRIEG";
-    WarPolicy["Fortress"] = "FORTRESS";
-    WarPolicy["Moneybags"] = "MONEYBAGS";
-    WarPolicy["Pirate"] = "PIRATE";
-    WarPolicy["Tactician"] = "TACTICIAN";
-    WarPolicy["Guardian"] = "GUARDIAN";
-    WarPolicy["Covert"] = "COVERT";
-    WarPolicy["Arcane"] = "ARCANE";
-})(WarPolicy || (WarPolicy = {}));
-export var DomesticPolicy;
-(function (DomesticPolicy) {
-    DomesticPolicy["ManifestDestiny"] = "MANIFEST_DESTINY";
-    DomesticPolicy["OpenMarkets"] = "OPEN_MARKETS";
-    DomesticPolicy["TechnologicalAdvancement"] = "TECHNOLOGICAL_ADVANCEMENT";
-    DomesticPolicy["Imperialism"] = "IMPERIALISM";
-    DomesticPolicy["Urbanization"] = "URBANIZATION";
-    DomesticPolicy["RapidExpansion"] = "RAPID_EXPANSION";
-})(DomesticPolicy || (DomesticPolicy = {}));
+export var AllianceTaxBracketsOrderByColumn;
+(function (AllianceTaxBracketsOrderByColumn) {
+    AllianceTaxBracketsOrderByColumn["Id"] = "ID";
+    AllianceTaxBracketsOrderByColumn["Date"] = "DATE";
+    AllianceTaxBracketsOrderByColumn["DateModified"] = "DATE_MODIFIED";
+    AllianceTaxBracketsOrderByColumn["TaxRate"] = "TAX_RATE";
+    AllianceTaxBracketsOrderByColumn["ResourceRaxRate"] = "RESOURCE_RAX_RATE";
+})(AllianceTaxBracketsOrderByColumn || (AllianceTaxBracketsOrderByColumn = {}));
+export var AllianceWarsOrderByColumn;
+(function (AllianceWarsOrderByColumn) {
+    AllianceWarsOrderByColumn["Id"] = "ID";
+    AllianceWarsOrderByColumn["Date"] = "DATE";
+})(AllianceWarsOrderByColumn || (AllianceWarsOrderByColumn = {}));
 export var WarType;
 (function (WarType) {
     WarType["Ordinary"] = "ORDINARY";
@@ -110,6 +107,33 @@ export var AttackType;
     AttackType["Victory"] = "VICTORY";
     AttackType["Allianceloot"] = "ALLIANCELOOT";
 })(AttackType || (AttackType = {}));
+export var WarPolicy;
+(function (WarPolicy) {
+    WarPolicy["Attrition"] = "ATTRITION";
+    WarPolicy["Turtle"] = "TURTLE";
+    WarPolicy["Blitzkrieg"] = "BLITZKRIEG";
+    WarPolicy["Fortress"] = "FORTRESS";
+    WarPolicy["Moneybags"] = "MONEYBAGS";
+    WarPolicy["Pirate"] = "PIRATE";
+    WarPolicy["Tactician"] = "TACTICIAN";
+    WarPolicy["Guardian"] = "GUARDIAN";
+    WarPolicy["Covert"] = "COVERT";
+    WarPolicy["Arcane"] = "ARCANE";
+})(WarPolicy || (WarPolicy = {}));
+export var DomesticPolicy;
+(function (DomesticPolicy) {
+    DomesticPolicy["ManifestDestiny"] = "MANIFEST_DESTINY";
+    DomesticPolicy["OpenMarkets"] = "OPEN_MARKETS";
+    DomesticPolicy["TechnologicalAdvancement"] = "TECHNOLOGICAL_ADVANCEMENT";
+    DomesticPolicy["Imperialism"] = "IMPERIALISM";
+    DomesticPolicy["Urbanization"] = "URBANIZATION";
+    DomesticPolicy["RapidExpansion"] = "RAPID_EXPANSION";
+})(DomesticPolicy || (DomesticPolicy = {}));
+export var NationWarsOrderByColumn;
+(function (NationWarsOrderByColumn) {
+    NationWarsOrderByColumn["Id"] = "ID";
+    NationWarsOrderByColumn["Date"] = "DATE";
+})(NationWarsOrderByColumn || (NationWarsOrderByColumn = {}));
 export var NationBankrecsOrderByColumn;
 (function (NationBankrecsOrderByColumn) {
     NationBankrecsOrderByColumn["Id"] = "ID";
@@ -127,6 +151,21 @@ export var NationBankrecsOrderByColumn;
     NationBankrecsOrderByColumn["Aluminum"] = "ALUMINUM";
     NationBankrecsOrderByColumn["Food"] = "FOOD";
 })(NationBankrecsOrderByColumn || (NationBankrecsOrderByColumn = {}));
+export var TradeType;
+(function (TradeType) {
+    TradeType["Global"] = "GLOBAL";
+    TradeType["Personal"] = "PERSONAL";
+    TradeType["Alliance"] = "ALLIANCE";
+})(TradeType || (TradeType = {}));
+export var NationTradesOrderByColumn;
+(function (NationTradesOrderByColumn) {
+    NationTradesOrderByColumn["Id"] = "ID";
+    NationTradesOrderByColumn["Date"] = "DATE";
+    NationTradesOrderByColumn["DateAccepted"] = "DATE_ACCEPTED";
+    NationTradesOrderByColumn["OfferResource"] = "OFFER_RESOURCE";
+    NationTradesOrderByColumn["OfferAmount"] = "OFFER_AMOUNT";
+    NationTradesOrderByColumn["ReturnAmount"] = "RETURN_AMOUNT";
+})(NationTradesOrderByColumn || (NationTradesOrderByColumn = {}));
 export var NationTaxrecsOrderByColumn;
 (function (NationTaxrecsOrderByColumn) {
     NationTaxrecsOrderByColumn["Id"] = "ID";
@@ -158,17 +197,132 @@ export var BbTeamGamesOrderByColumn;
     BbTeamGamesOrderByColumn["Htscore"] = "HTSCORE";
     BbTeamGamesOrderByColumn["Atscore"] = "ATSCORE";
 })(BbTeamGamesOrderByColumn || (BbTeamGamesOrderByColumn = {}));
+export var EconomicPolicy;
+(function (EconomicPolicy) {
+    EconomicPolicy["ExtremeLeft"] = "EXTREME_LEFT";
+    EconomicPolicy["FarLeft"] = "FAR_LEFT";
+    EconomicPolicy["Left"] = "LEFT";
+    EconomicPolicy["Moderate"] = "MODERATE";
+    EconomicPolicy["Right"] = "RIGHT";
+    EconomicPolicy["FarRight"] = "FAR_RIGHT";
+    EconomicPolicy["ExtremeRight"] = "EXTREME_RIGHT";
+})(EconomicPolicy || (EconomicPolicy = {}));
+export var SocialPolicy;
+(function (SocialPolicy) {
+    SocialPolicy["Anarchist"] = "ANARCHIST";
+    SocialPolicy["Libertarian"] = "LIBERTARIAN";
+    SocialPolicy["Liberal"] = "LIBERAL";
+    SocialPolicy["Moderate"] = "MODERATE";
+    SocialPolicy["Conservative"] = "CONSERVATIVE";
+    SocialPolicy["Authoritarian"] = "AUTHORITARIAN";
+    SocialPolicy["Fascist"] = "FASCIST";
+})(SocialPolicy || (SocialPolicy = {}));
+export var GovernmentType;
+(function (GovernmentType) {
+    GovernmentType["AbsoluteMonarchy"] = "ABSOLUTE_MONARCHY";
+    GovernmentType["Anarchy"] = "ANARCHY";
+    GovernmentType["Aristocracy"] = "ARISTOCRACY";
+    GovernmentType["BananaRepublic"] = "BANANA_REPUBLIC";
+    GovernmentType["CommunistDemocracy"] = "COMMUNIST_DEMOCRACY";
+    GovernmentType["CommunistDictatorship"] = "COMMUNIST_DICTATORSHIP";
+    GovernmentType["CommunistMonarchy"] = "COMMUNIST_MONARCHY";
+    GovernmentType["CommunistRepublic"] = "COMMUNIST_REPUBLIC";
+    GovernmentType["CommunistTheocracy"] = "COMMUNIST_THEOCRACY";
+    GovernmentType["ConstitutionalMonarchy"] = "CONSTITUTIONAL_MONARCHY";
+    GovernmentType["ConstitutionalRepublic"] = "CONSTITUTIONAL_REPUBLIC";
+    GovernmentType["Demarchy"] = "DEMARCHY";
+    GovernmentType["Democracy"] = "DEMOCRACY";
+    GovernmentType["DemocraticRepublic"] = "DEMOCRATIC_REPUBLIC";
+    GovernmentType["Dictatorship"] = "DICTATORSHIP";
+    GovernmentType["FederalRepublic"] = "FEDERAL_REPUBLIC";
+    GovernmentType["Monarchy"] = "MONARCHY";
+    GovernmentType["Noocracy"] = "NOOCRACY";
+    GovernmentType["Oligarchy"] = "OLIGARCHY";
+    GovernmentType["ParliamentaryDemocracy"] = "PARLIAMENTARY_DEMOCRACY";
+    GovernmentType["ParliamentaryRepublic"] = "PARLIAMENTARY_REPUBLIC";
+    GovernmentType["PeoplesRepublic"] = "PEOPLES_REPUBLIC";
+    GovernmentType["Republic"] = "REPUBLIC";
+    GovernmentType["SocialDemocracy"] = "SOCIAL_DEMOCRACY";
+    GovernmentType["SocialistDictatorship"] = "SOCIALIST_DICTATORSHIP";
+    GovernmentType["SocialistRepublic"] = "SOCIALIST_REPUBLIC";
+    GovernmentType["SocialistTheocracy"] = "SOCIALIST_THEOCRACY";
+    GovernmentType["Stratocracy"] = "STRATOCRACY";
+    GovernmentType["Technocracy"] = "TECHNOCRACY";
+    GovernmentType["Theocracy"] = "THEOCRACY";
+    GovernmentType["TheocraticDemocracy"] = "THEOCRATIC_DEMOCRACY";
+    GovernmentType["TheocraticDictatorship"] = "THEOCRATIC_DICTATORSHIP";
+    GovernmentType["TheocraticRepublic"] = "THEOCRATIC_REPUBLIC";
+})(GovernmentType || (GovernmentType = {}));
+export var Resources;
+(function (Resources) {
+    Resources["Food"] = "FOOD";
+    Resources["Coal"] = "COAL";
+    Resources["Oil"] = "OIL";
+    Resources["Uranium"] = "URANIUM";
+    Resources["Lead"] = "LEAD";
+    Resources["Iron"] = "IRON";
+    Resources["Bauxite"] = "BAUXITE";
+    Resources["Gasoline"] = "GASOLINE";
+    Resources["Munitions"] = "MUNITIONS";
+    Resources["Steel"] = "STEEL";
+    Resources["Aluminum"] = "ALUMINUM";
+    Resources["Credit"] = "CREDIT";
+})(Resources || (Resources = {}));
+export var QueryNationResourceStatsOrderByColumn;
+(function (QueryNationResourceStatsOrderByColumn) {
+    QueryNationResourceStatsOrderByColumn["Date"] = "DATE";
+    QueryNationResourceStatsOrderByColumn["Money"] = "MONEY";
+    QueryNationResourceStatsOrderByColumn["Food"] = "FOOD";
+    QueryNationResourceStatsOrderByColumn["Steel"] = "STEEL";
+    QueryNationResourceStatsOrderByColumn["Aluminum"] = "ALUMINUM";
+    QueryNationResourceStatsOrderByColumn["Gasoline"] = "GASOLINE";
+    QueryNationResourceStatsOrderByColumn["Munitions"] = "MUNITIONS";
+    QueryNationResourceStatsOrderByColumn["Uranium"] = "URANIUM";
+    QueryNationResourceStatsOrderByColumn["Coal"] = "COAL";
+    QueryNationResourceStatsOrderByColumn["Oil"] = "OIL";
+    QueryNationResourceStatsOrderByColumn["Iron"] = "IRON";
+    QueryNationResourceStatsOrderByColumn["Bauxite"] = "BAUXITE";
+    QueryNationResourceStatsOrderByColumn["Lead"] = "LEAD";
+})(QueryNationResourceStatsOrderByColumn || (QueryNationResourceStatsOrderByColumn = {}));
+export var Continents;
+(function (Continents) {
+    Continents["Africa"] = "AFRICA";
+    Continents["Antarctica"] = "ANTARCTICA";
+    Continents["Asia"] = "ASIA";
+    Continents["Australia"] = "AUSTRALIA";
+    Continents["Europe"] = "EUROPE";
+    Continents["NorthAmerica"] = "NORTH_AMERICA";
+    Continents["SouthAmerica"] = "SOUTH_AMERICA";
+})(Continents || (Continents = {}));
 export var QueryNationsOrderByColumn;
 (function (QueryNationsOrderByColumn) {
     QueryNationsOrderByColumn["Id"] = "ID";
     QueryNationsOrderByColumn["Date"] = "DATE";
     QueryNationsOrderByColumn["Soldiers"] = "SOLDIERS";
+    QueryNationsOrderByColumn["SoldiersLost"] = "SOLDIERS_LOST";
+    QueryNationsOrderByColumn["SoldierKills"] = "SOLDIER_KILLS";
     QueryNationsOrderByColumn["Tanks"] = "TANKS";
+    QueryNationsOrderByColumn["TanksLost"] = "TANKS_LOST";
+    QueryNationsOrderByColumn["TankKills"] = "TANK_KILLS";
     QueryNationsOrderByColumn["Aircraft"] = "AIRCRAFT";
+    QueryNationsOrderByColumn["AircraftLost"] = "AIRCRAFT_LOST";
+    QueryNationsOrderByColumn["AircraftKills"] = "AIRCRAFT_KILLS";
     QueryNationsOrderByColumn["Ships"] = "SHIPS";
+    QueryNationsOrderByColumn["ShipsLost"] = "SHIPS_LOST";
+    QueryNationsOrderByColumn["ShipKills"] = "SHIP_KILLS";
     QueryNationsOrderByColumn["Missiles"] = "MISSILES";
+    QueryNationsOrderByColumn["MissilesLaunched"] = "MISSILES_LAUNCHED";
+    QueryNationsOrderByColumn["MissilesEaten"] = "MISSILES_EATEN";
     QueryNationsOrderByColumn["Nukes"] = "NUKES";
+    QueryNationsOrderByColumn["NukesLaunched"] = "NUKES_LAUNCHED";
+    QueryNationsOrderByColumn["NukesEaten"] = "NUKES_EATEN";
     QueryNationsOrderByColumn["Cities"] = "CITIES";
+    QueryNationsOrderByColumn["Score"] = "SCORE";
+    QueryNationsOrderByColumn["Gdp"] = "GDP";
+    QueryNationsOrderByColumn["Population"] = "POPULATION";
+    QueryNationsOrderByColumn["ApprovalRating"] = "APPROVAL_RATING";
+    QueryNationsOrderByColumn["InfraDestroyed"] = "INFRA_DESTROYED";
+    QueryNationsOrderByColumn["InfraLost"] = "INFRA_LOST";
 })(QueryNationsOrderByColumn || (QueryNationsOrderByColumn = {}));
 export var QueryAlliancesOrderByColumn;
 (function (QueryAlliancesOrderByColumn) {
@@ -176,12 +330,6 @@ export var QueryAlliancesOrderByColumn;
     QueryAlliancesOrderByColumn["Date"] = "DATE";
     QueryAlliancesOrderByColumn["Score"] = "SCORE";
 })(QueryAlliancesOrderByColumn || (QueryAlliancesOrderByColumn = {}));
-export var TradeType;
-(function (TradeType) {
-    TradeType["Global"] = "GLOBAL";
-    TradeType["Personal"] = "PERSONAL";
-    TradeType["Alliance"] = "ALLIANCE";
-})(TradeType || (TradeType = {}));
 export var QueryTradesOrderByColumn;
 (function (QueryTradesOrderByColumn) {
     QueryTradesOrderByColumn["Id"] = "ID";
@@ -273,13 +421,60 @@ export var QueryBaseballPlayersOrderByColumn;
 export var QueryTreasureTradesOrderByColumn;
 (function (QueryTreasureTradesOrderByColumn) {
     QueryTreasureTradesOrderByColumn["Id"] = "ID";
-    QueryTreasureTradesOrderByColumn["Date"] = "DATE";
 })(QueryTreasureTradesOrderByColumn || (QueryTreasureTradesOrderByColumn = {}));
 export var QueryEmbargoesOrderByColumn;
 (function (QueryEmbargoesOrderByColumn) {
     QueryEmbargoesOrderByColumn["Id"] = "ID";
     QueryEmbargoesOrderByColumn["Date"] = "DATE";
 })(QueryEmbargoesOrderByColumn || (QueryEmbargoesOrderByColumn = {}));
+export var EmbargoType;
+(function (EmbargoType) {
+    EmbargoType["NationToNation"] = "NATION_TO_NATION";
+    EmbargoType["NationToAlliance"] = "NATION_TO_ALLIANCE";
+    EmbargoType["AllianceToNation"] = "ALLIANCE_TO_NATION";
+    EmbargoType["AllianceToAlliance"] = "ALLIANCE_TO_ALLIANCE";
+})(EmbargoType || (EmbargoType = {}));
+export var QueryResourceStatsOrderByColumn;
+(function (QueryResourceStatsOrderByColumn) {
+    QueryResourceStatsOrderByColumn["Date"] = "DATE";
+    QueryResourceStatsOrderByColumn["Money"] = "MONEY";
+    QueryResourceStatsOrderByColumn["Food"] = "FOOD";
+    QueryResourceStatsOrderByColumn["Steel"] = "STEEL";
+    QueryResourceStatsOrderByColumn["Aluminum"] = "ALUMINUM";
+    QueryResourceStatsOrderByColumn["Gasoline"] = "GASOLINE";
+    QueryResourceStatsOrderByColumn["Munitions"] = "MUNITIONS";
+    QueryResourceStatsOrderByColumn["Uranium"] = "URANIUM";
+    QueryResourceStatsOrderByColumn["Coal"] = "COAL";
+    QueryResourceStatsOrderByColumn["Oil"] = "OIL";
+    QueryResourceStatsOrderByColumn["Iron"] = "IRON";
+    QueryResourceStatsOrderByColumn["Bauxite"] = "BAUXITE";
+    QueryResourceStatsOrderByColumn["Lead"] = "LEAD";
+})(QueryResourceStatsOrderByColumn || (QueryResourceStatsOrderByColumn = {}));
+export var QueryActivityStatsOrderByColumn;
+(function (QueryActivityStatsOrderByColumn) {
+    QueryActivityStatsOrderByColumn["Date"] = "DATE";
+    QueryActivityStatsOrderByColumn["TotalNations"] = "TOTAL_NATIONS";
+    QueryActivityStatsOrderByColumn["NationsCreated"] = "NATIONS_CREATED";
+    QueryActivityStatsOrderByColumn["Active_1Day"] = "ACTIVE_1_DAY";
+    QueryActivityStatsOrderByColumn["Active_2Days"] = "ACTIVE_2_DAYS";
+    QueryActivityStatsOrderByColumn["Active_3Days"] = "ACTIVE_3_DAYS";
+    QueryActivityStatsOrderByColumn["Active_1Week"] = "ACTIVE_1_WEEK";
+    QueryActivityStatsOrderByColumn["Active_1Month"] = "ACTIVE_1_MONTH";
+})(QueryActivityStatsOrderByColumn || (QueryActivityStatsOrderByColumn = {}));
+export var QueryBannedNationsOrderByColumn;
+(function (QueryBannedNationsOrderByColumn) {
+    QueryBannedNationsOrderByColumn["NationId"] = "NATION_ID";
+    QueryBannedNationsOrderByColumn["Date"] = "DATE";
+})(QueryBannedNationsOrderByColumn || (QueryBannedNationsOrderByColumn = {}));
+export var DefaultAlliancePosition;
+(function (DefaultAlliancePosition) {
+    DefaultAlliancePosition["Remove"] = "REMOVE";
+    DefaultAlliancePosition["Applicant"] = "APPLICANT";
+    DefaultAlliancePosition["Member"] = "MEMBER";
+    DefaultAlliancePosition["Officer"] = "OFFICER";
+    DefaultAlliancePosition["Heir"] = "HEIR";
+    DefaultAlliancePosition["Leader"] = "LEADER";
+})(DefaultAlliancePosition || (DefaultAlliancePosition = {}));
 export var OrderByRelationAggregateFunction;
 (function (OrderByRelationAggregateFunction) {
     OrderByRelationAggregateFunction["Count"] = "COUNT";
