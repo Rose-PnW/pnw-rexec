@@ -1,9 +1,12 @@
 export class ProjectBits {
-  bits: number;
-  constructor(bits: number) {
-    this.bits = bits;
+  bits: bigint;
+  constructor(bits: number | bigint | string) {
+    this.bits = BigInt(bits);
   }
-  and = (bit: number) => (this.bits & bit) === bit;
+  and = (bit: bigint | number) => {
+    bit = BigInt(bit);
+    return (this.bits & bit) === bit;
+  }
   ironw = () => this.and(1 << 0);
   bauxitew = () => this.and(1 << 1);
   armss = () => this.and(1 << 2);

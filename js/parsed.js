@@ -1,6 +1,9 @@
 export class ProjectBits {
     constructor(bits) {
-        this.and = (bit) => (this.bits & bit) === bit;
+        this.and = (bit) => {
+            bit = BigInt(bit);
+            return (this.bits & bit) === bit;
+        };
         this.ironw = () => this.and(1 << 0);
         this.bauxitew = () => this.and(1 << 1);
         this.armss = () => this.and(1 << 2);
@@ -31,6 +34,6 @@ export class ProjectBits {
         this.gsa_np = () => this.and(1 << 27);
         this.rnd_np = () => this.and(1 << 28);
         this.rpc_np = () => this.and(1 << 29);
-        this.bits = bits;
+        this.bits = BigInt(bits);
     }
 }

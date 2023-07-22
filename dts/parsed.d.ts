@@ -1,7 +1,7 @@
 export declare class ProjectBits {
-    bits: number;
-    constructor(bits: number);
-    and: (bit: number) => boolean;
+    bits: bigint;
+    constructor(bits: number | bigint | string);
+    and: (bit: bigint | number) => boolean;
     ironw: () => boolean;
     bauxitew: () => boolean;
     armss: () => boolean;
