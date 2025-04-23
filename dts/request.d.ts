@@ -1,5 +1,5 @@
-import { ChildArgs } from './children_args';
-import { City, Bounty, Trade, Treaty, Alliance, QueryAlliancesArgs, Bankrec, QueryBankrecsArgs, Nation, QueryNationsArgs, BbGame, QueryBaseball_GamesArgs, BbPlayer, QueryBaseball_PlayersArgs, BbTeam, QueryBaseball_TeamsArgs, QueryBountiesArgs, QueryCitiesArgs, Tradeprice, QueryTradepricesArgs, QueryTradesArgs, QueryTreatiesArgs, WarAttack, QueryWarattacksArgs, War, QueryWarsArgs } from './types';
+import { ChildArgs } from './children_args.js';
+import { City, Bounty, Trade, Treaty, Alliance, QueryAlliancesArgs, Bankrec, QueryBankrecsArgs, Nation, QueryNationsArgs, BbGame, QueryBaseball_GamesArgs, BbPlayer, QueryBaseball_PlayersArgs, BbTeam, QueryBaseball_TeamsArgs, QueryBountiesArgs, QueryCitiesArgs, Tradeprice, QueryTradepricesArgs, QueryTradesArgs, QueryTreatiesArgs, WarAttack, QueryWarattacksArgs, War, QueryWarsArgs } from './types.js';
 type Child<T> = T extends (infer U)[] ? NonNullable<U> : NonNullable<T>;
 type ChildReturn<T, R> = T extends any[] ? R[] : R;
 type ChildrenKeys<T> = Exclude<keyof T, PrimitiveKeys<T>>;

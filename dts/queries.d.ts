@@ -1,7 +1,7 @@
 import { Executor } from './executors.js';
 import { PaginatorReturn } from './paginator.js';
 import { Arguments, Request } from './request.js';
-import { City, Color, GameInfo, ApiKeyDetails, Bounty, Trade, Treasure, Treaty, Bankrec, BbGame, BbPlayer, BbTeam, Nation, Tradeprice, War, WarAttack, Alliance } from './types';
+import { City, Color, GameInfo, ApiKeyDetails, Bounty, Trade, Treasure, Treaty, Bankrec, BbGame, BbPlayer, BbTeam, Nation, Tradeprice, War, WarAttack, Alliance } from './types.js';
 export declare class RequestBuilder<O, Response = {}> {
     private executor;
     private requests;

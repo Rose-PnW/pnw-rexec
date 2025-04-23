@@ -5,7 +5,7 @@ import {
   Query,
   City, Color, GameInfo, ApiKeyDetails, Bounty, Trade, Treasure, Treaty,
   Bankrec, BbGame, BbPlayer, BbTeam, Nation, Tradeprice, War, WarAttack, Alliance
-} from './types';
+} from './types.js';
 
 export class RequestBuilder<O, Response = {}> {
   private executor: Executor<O>;

@@ -1,4 +1,4 @@
-import { ChildArgs } from './children_args';
+import { ChildArgs } from './children_args.js';
 import {
   City, Bounty, Trade, Treaty,
   Alliance, QueryAlliancesArgs, 
@@ -12,7 +12,7 @@ import {
   QueryTradesArgs, QueryTreatiesArgs,
   WarAttack, QueryWarattacksArgs,
   War, QueryWarsArgs
-} from './types';
+} from './types.js';
 
 type Child<T> = T extends (infer U)[] ? NonNullable<U> : NonNullable<T>;
 type ChildReturn<T, R> = T extends any[] ? R[] : R;

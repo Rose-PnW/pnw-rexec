@@ -1,4 +1,4 @@
-import { Alliance, AllianceBankrecsArgs, AllianceNationsArgs, AllianceTaxrecsArgs, Bankrec, BbTeam, BbTeamGamesArgs, Nation, NationBankrecsArgs, NationWarsArgs, War, WarAttacksArgs } from "./types"
+import { Alliance, AllianceBankrecsArgs, AllianceNationsArgs, AllianceTaxrecsArgs, Bankrec, BbTeam, BbTeamGamesArgs, Nation, NationBankrecsArgs, NationWarsArgs, War, WarAttacksArgs } from "./types.js"
 
 type NationChildArgs<Child> = Child extends 'wars' ? NationWarsArgs
   : Child extends 'offensive_wars' ? NationWarsArgs
